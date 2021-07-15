@@ -32,18 +32,21 @@
           <li class="nav-link">
             <a href="{{ url_for('core.about') }}">O nas</a>
           </li>
+          {% if current_user.is_authenticated %}
           <li class="nav-link">
-            <a href="#">Odhlasit</a>
+            <a href="{{ url_for('users.account') }}">Ucet</a>
           </li>
           <li class="nav-link">
-            <a href="#">Ucet</a>
+            <a href="{{ url_for('users.logout') }}">Odhlasit</a>
+          </li>
+          {% else %}
+          <li class="nav-link">
+            <a href="{{ url_for('users.login') }}">Prihlasit</a>
           </li>
           <li class="nav-link">
-            <a href="#">Prihlasit</a>
+            <a href="{{ url_for('users.register') }}">Registrovat</a>
           </li>
-          <li class="nav-link">
-            <a href="#">Registrovat</a>
-          </li>
+          {% endif %}
         </ul>
       </header>
     </div>

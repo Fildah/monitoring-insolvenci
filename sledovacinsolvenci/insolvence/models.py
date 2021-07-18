@@ -1,10 +1,9 @@
-from sledovacinsolvenci import db
+from sledovacinsolvenci.extensions import db
 
 
 class Insolvence(db.Model):
     __tablename__ = 'insolvence'
     id = db.Column(db.Integer, primary_key=True)
-    partner_id = db.Column(db.Ineger, db.ForeignKey('partners.id'), nullable=False)
     case = db.Column(db.String(10), index=True)
     state = db.Column(db.String(128), index=True)
     created = db.Column(db.Date, nullable=False)

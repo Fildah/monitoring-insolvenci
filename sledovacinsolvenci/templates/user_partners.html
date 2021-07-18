@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="p-5 mb-4 bg-light rounded-3">
+        <h1>Vsichni partneri pro uzivatele: {{ user.first_name }} {{ user.last_name }}</h1>
+    </div>
+    <div class="container">
+        <form action="{{ url_for('partners.create_partner') }}" method="get">
+            <input class="btn btn-success" type="submit" value="Pridat noveho partnera"/>
+        </form>
+    </div>
+    <div class="container">
+        {% for partner in partners.items %}
+            <h2><a href="{{ url_for('partners.partner_detail', partner_id=partner.id) }}">{{ partner.ico }}</a></h2>
+        {% endfor %}
+    </div>
+{% endblock %}

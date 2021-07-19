@@ -128,9 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Editor
-.vscode/
-
 # DB and Migrations
 migrations/
 data.sqlite

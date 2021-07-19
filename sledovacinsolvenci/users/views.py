@@ -18,7 +18,7 @@ def register():
         db.session.commit()
         flash('Dekujeme za registraci')
         return redirect(url_for('users.login'))
-    return render_template('register.html', form=form)
+    return render_template('register.html', title='Registrace do Sledovace insolvece', form=form)
 
 
 @users.route('/login', methods=['GET', 'POST'])
@@ -33,7 +33,7 @@ def login():
             if next_page is None or not next_page[0] == '/':
                 next_page = url_for('core.index')
             return redirect(next_page)
-    return render_template('login.html', form=form)
+    return render_template('login.html', title='Prihlaseni do Sledovace insolvece', form=form)
 
 
 @users.route('/logout')
@@ -57,4 +57,6 @@ def account():
         form.email.data = current_user.email
         form.first_name.data = current_user.first_name
         form.last_name.data = current_user.last_name
-    return render_template('account.html', form=form)
+    return render_template('account.html',
+                           title='Uzivatelsky ucet: {} {}'.format(current_user.first_name, current_user.last_name),
+                           form=form)

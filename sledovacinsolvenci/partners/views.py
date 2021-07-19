@@ -13,7 +13,8 @@ partners = Blueprint('partners', __name__)
 def user_partners():
     page = request.args.get('page', 1, type=int)
     partners_for_user = Partner.query.filter(Partner.subscribers.contains(current_user)).paginate(page=page, per_page=5)
-    return render_template('user_partners.html', partners=partners_for_user, user=current_user)
+    return render_template('user_partners.html', title='Sledovani partneri', partners=partners_for_user,
+                           user=current_user)
 
 
 @partners.route('/create', methods=['GET', 'POST'])
@@ -32,7 +33,7 @@ def create_partner():
         db.session.commit()
         flash('Partner vytvoren')
         return redirect(url_for('partners.partner_detail', partner_id=partner.id))
-    return render_template('create_partner.html', form=form)
+    return render_template('create_partner.html', title='Vytvoreni partnera', form=form)
 
 
 @partners.get('/<int:partner_id>')
@@ -41,7 +42,7 @@ def partner_detail(partner_id):
     partner = Partner.query.get_or_404(partner_id)
     if current_user not in partner.subscribers:
         abort(403)
-    return render_template('partner_detail.html', partner=partner)
+    return render_template('partner_detail.html', title='Detail partnera: {}'.format(partner.ico), partner=partner)
 
 
 @partners.post('/<int:partner_id>/delete')

@@ -16,7 +16,7 @@ def register():
                     password=form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('Dekujeme za registraci')
+        flash('Dekujeme za registraci', 'success')
         return redirect(url_for('users.login'))
     return render_template('register.html', title='Registrace do Sledovace insolvece', form=form)
 
@@ -28,7 +28,7 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user.password_check(form.password.data) and user is not None:
             login_user(user)
-            flash('Uspesne prihlaseni')
+            flash('Uspesne prihlaseni', 'success')
             next_page = request.args.get('next')
             if next_page is None or not next_page[0] == '/':
                 next_page = url_for('core.index')
@@ -51,7 +51,7 @@ def account():
         current_user.first_name = form.first_name.data
         current_user.last_name = form.last_name.data
         db.session.commit()
-        flash('Uzivatelsky ucet byl aktualizovan')
+        flash('Uzivatelsky ucet byl aktualizovan', 'success')
         return redirect(url_for('users.account'))
     elif request.method == 'GET':
         form.email.data = current_user.email

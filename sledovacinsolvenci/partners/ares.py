@@ -1,17 +1,76 @@
 import requests
+import xmltodict
 
-if __name__ == '__main__':
-    #  wsdl = 'https://wwwinfo.mfcr.cz/ares/xml_doc/wsdl/standard.wsdl'
-    #  session = Session()
-    #  session.verify = False
-    #  transport = Transport(session=session)
-    #  client = Client(wsdl=wsdl, transport=transport)
-    #  print(client.service.GetXmlFile(
-    #      Dotaz=[{'Pomocne_ID': '1', 'Typ_vyhledani': 'FREE', 'Klicove_polozky': {'ICO': '02633582'}, 'Max_pocet': 10}],
-    #      dotaz_datum_cas=datetime.datetime.now().isoformat(), dotaz_pocet=1, dotaz_typ='Basic', vystup_format='XML',
-    #      user_mail='test@test.te',
-    #      validation_XSLT="https://wwwinfo.mfcr.cz/ares/xml_doc/schemas/ares/ares_request/v_1.0.1/ares_request_v_1.0.1.xsd",
-    #      answerNamespaceRequired='https://wwwinfo.mfcr.cz/ares/xml_doc/schemas/ares/ares_answer_basic/v_1.0.2/ares_answer_basic_v_1.0.2.xsd',
-    #      Id='ares_dotaz'))
-    response = requests.get('http://wwwinfo.mfcr.cz/cgi-bin/ares/xar.cgi', params={'ico': '02633582'})
-    print(response.text)
+from sledovacinsolvenci.partners.models import Partner
+
+
+def get_ares_data(ico):
+    response = requests.get('https://wwwinfo.mfcr.cz/cgi-bin/ares/darv_bas.cgi?ico={}&aktivni=false'.format(ico))
+    response.encoding = 'UTF-8'
+    ares = xmltodict.parse(response.text)
+    partner_data = dict()
+    if 'D:E' not in ares['are:Ares_odpovedi']['are:Odpoved']:
+        ares_vbas = ares['are:Ares_odpovedi']['are:Odpoved']['D:VBAS']
+        ares_aa = ares_vbas['D:AA']
+        partner_data['ico'] = ares_vbas['D:ICO']['#text']
+        if 'D:DIC' in ares_vbas:
+            partner_data['dic'] = ares_vbas['D:DIC']['#text']
+        else:
+            partner_data['dic'] = None
+        partner_data['name'] = ares_vbas['D:OF']['#text']
+        if 'D:ROR' in ares_vbas:
+            partner_data['state'] = ares_vbas['D:ROR']['D:SOR']['D:SSU']
+        else:
+            partner_data['state'] = None
+        partner_data['created'] = ares_vbas['D:DV']
+        partner_data['closed'] = None
+        partner_data['business_form'] = ares_vbas['D:PF']['D:NPF']
+        if 'D:NU' in ares_aa:
+            partner_data['street'] = ares_aa['D:NU']
+        else:
+            partner_data['street'] = None
+        if 'D:CD' in ares_aa:
+            partner_data['street_number'] = ares_aa['D:CD']
+        else:
+            partner_data['street_number'] = None
+        if 'D:CO' in ares_aa:
+            partner_data['orientation_number'] = ares_aa['D:CO']
+        else:
+            partner_data['orientation_number'] = None
+        if 'D:NCO' in ares_aa:
+            partner_data['city_part'] = ares_aa['D:NCO']
+        else:
+            partner_data['city_part'] = None
+        if 'D:N' in ares_aa:
+            partner_data['city'] = ares_aa['D:N']
+        else:
+            partner_data['city'] = None
+        if 'D:PSC' in ares_aa:
+            partner_data['zip_code'] = ares_aa['D:PSC']
+        else:
+            partner_data['zip_code'] = None
+        if 'D:NS' in ares_aa:
+            partner_data['country'] = ares_aa['D:NS']
+        else:
+            partner_data['country'] = None
+        return partner_data
+    return None
+
+
+def fill_partner_with_ares(partner_ares):
+    return Partner(
+        ico=partner_ares['ico'],
+        dic=partner_ares['dic'],
+        name=partner_ares['name'],
+        state=partner_ares['state'],
+        created=partner_ares['created'],
+        closed=partner_ares['closed'],
+        business_form=partner_ares['business_form'],
+        street=partner_ares['street'],
+        street_number=partner_ares['street_number'],
+        orientation_number=partner_ares['orientation_number'],
+        city_part=partner_ares['city_part'],
+        city=partner_ares['city'],
+        zip_code=partner_ares['zip_code'],
+        country=partner_ares['country']
+    )

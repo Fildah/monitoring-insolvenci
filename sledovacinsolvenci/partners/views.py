@@ -2,6 +2,7 @@ from flask import render_template, url_for, flash, redirect, request, Blueprint,
 from flask_login import login_required, current_user
 
 from sledovacinsolvenci.extensions import db
+from sledovacinsolvenci.partners.ares import get_ares_data, fill_partner_with_ares
 from sledovacinsolvenci.partners.forms import PartnerForm
 from sledovacinsolvenci.partners.models import Partner
 
@@ -12,7 +13,8 @@ partners = Blueprint('partners', __name__)
 @login_required
 def user_partners():
     page = request.args.get('page', 1, type=int)
-    partners_for_user = Partner.query.filter(Partner.subscribers.contains(current_user)).paginate(page=page, per_page=5)
+    partners_for_user = Partner.query.filter(Partner.subscribers.contains(current_user)).paginate(page=page,
+                                                                                                  per_page=10)
     return render_template('user_partners.html', title='Sledovani partneri', partners=partners_for_user,
                            user=current_user)
 
@@ -27,12 +29,18 @@ def create_partner():
             partner.subscribers.append(current_user)
             partner.active = True
         else:
-            partner = Partner(ico=form.ico.data)
-            partner.subscribers.append(current_user)
-            db.session.add(partner)
+            partner_ares = get_ares_data(form.ico.data)
+            if partner_ares:
+                partner = fill_partner_with_ares(partner_ares)
+                partner.subscribers.append(current_user)
+                db.session.add(partner)
+            else:
+                flash('Chyba v ICO', "warning")
+                return render_template('create_partner.html', title='Vytvoreni partnera', form=form)
         db.session.commit()
-        flash('Partner vytvoren')
+        flash('Partner vytvoren', 'success')
         return redirect(url_for('partners.partner_detail', partner_id=partner.id))
+    flash('Chyba v ICO', "warning")
     return render_template('create_partner.html', title='Vytvoreni partnera', form=form)
 
 

@@ -1,11 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="container">
-        <form class="form-group" method="POST">
-            {{ form.hidden_tag() }}
-            {{ form.ico.label }}
+    <form class="row g-3" method="POST">
+        {{ form.hidden_tag() }}
+        <div class="col-md-4">
+            {{ form.ico.label(class_='form-label') }}
+            <br>
             {{ form.ico }}
+        </div>
+        <div class="col-12">
             {{ form.submit }}
-        </form>
-    </div>
+        </div>
+    </form>
 {% endblock %}

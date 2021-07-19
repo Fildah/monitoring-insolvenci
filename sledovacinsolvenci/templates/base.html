@@ -27,33 +27,33 @@
                 <a href="{{ url_for('core.about') }}">O nas</a>
             </li>
             {% if current_user.is_authenticated %}
-            <li class="nav-link">
-                <a href="{{ url_for('partners.user_partners') }}">Partneri</a>
-            </li>
-            <li class="nav-link">
-                <a href="{{ url_for('users.account') }}">Ucet</a>
-            </li>
-            <li class="nav-link">
-                <a href="{{ url_for('users.logout') }}">Odhlasit</a>
-            </li>
+                <li class="nav-link">
+                    <a href="{{ url_for('partners.user_partners') }}">Partneri</a>
+                </li>
+                <li class="nav-link">
+                    <a href="{{ url_for('users.account') }}">Ucet</a>
+                </li>
+                <li class="nav-link">
+                    <a href="{{ url_for('users.logout') }}">Odhlasit</a>
+                </li>
             {% else %}
-            <li class="nav-link">
-                <a href="{{ url_for('users.login') }}">Prihlasit</a>
-            </li>
-            <li class="nav-link">
-                <a href="{{ url_for('users.register') }}">Registrovat</a>
-            </li>
+                <li class="nav-link">
+                    <a href="{{ url_for('users.login') }}">Prihlasit</a>
+                </li>
+                <li class="nav-link">
+                    <a href="{{ url_for('users.register') }}">Registrovat</a>
+                </li>
             {% endif %}
         </ul>
     </div>
 </header>
 <main>
     <div class="container">
-        {% for message in get_flashed_messages() %}
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+        {% for category, message in get_flashed_messages(with_categories=true) %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         {% endfor %}
         {% block content %}
         {% endblock %}

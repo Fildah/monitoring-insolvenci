@@ -45,11 +45,14 @@ class Partner(db.Model):
 
     def to_dict(self):
         return {
+            'id': self.id,
             'ico': self.ico,
             'dic': self.dic,
             'name': self.name,
-            'business_form': self.business_form,
             'state': self.state,
+            'created': self.created,
+            'closed': self.closed,
+            'business_form': self.business_form,
             'street': self.street,
             'street_number': self.street_number,
             'orientation_number': self.orientation_number,

@@ -96,16 +96,21 @@ def import_partners():
     if form.validate_on_submit():
         file = form.file.data
         filename = secure_filename(file.filename)
+        for line in file:
+            line = line.strip().decode("utf-8")
+            partner = Partner.query.filter_by(ico=line).first()
+            if partner:
+                partner.subscribers.append(current_user)
+                partner.active = True
+            else:
+                partner_ares = get_ares_data(line)
+                if partner_ares:
+                    partner = fill_partner_with_ares(partner_ares)
+                    partner.subscribers.append(current_user)
+                    db.session.add(partner)
+            db.session.commit()
+        return redirect(url_for('partners.user_partners'))
     return render_template('import_partners.html', title='Import partneru', form=form)
-
-
-@partners.get('/<int:partner_id>')
-@login_required
-def partner_detail(partner_id):
-    partner = Partner.query.get_or_404(partner_id)
-    if current_user not in partner.subscribers:
-        abort(403)
-    return render_template('partner_detail.html', title='Detail partnera: {}'.format(partner.ico), partner=partner)
 
 
 @partners.post('/<int:partner_id>/delete')
@@ -119,5 +124,5 @@ def delete_partner(partner_id):
     if len(partner.subscribers) == 0:
         partner.active = False
     db.session.commit()
-    flash('Partner smazan')
-    return redirect(url_for('core.index'))
+    flash('Partner {} smazan'.format(partner.name), 'success')
+    return redirect(url_for('partners.user_partners'))

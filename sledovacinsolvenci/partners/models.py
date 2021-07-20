@@ -42,3 +42,19 @@ class Partner(db.Model):
         self.zip_code = zip_code
         self.country = country
         self.active = True
+
+    def to_dict(self):
+        return {
+            'ico': self.ico,
+            'dic': self.dic,
+            'name': self.name,
+            'business_form': self.business_form,
+            'state': self.state,
+            'street': self.street,
+            'street_number': self.street_number,
+            'orientation_number': self.orientation_number,
+            'city_part': self.city_part,
+            'city': self.city,
+            'zip_code': self.zip_code,
+            'country': self.country
+        }

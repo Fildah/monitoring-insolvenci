@@ -26,13 +26,15 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        if user.password_check(form.password.data) and user is not None:
+        if user is not None and user.password_check(form.password.data):
             login_user(user)
             flash('Uspesne prihlaseni', 'success')
             next_page = request.args.get('next')
             if next_page is None or not next_page[0] == '/':
                 next_page = url_for('core.index')
             return redirect(next_page)
+        else:
+            flash('Chybný email nebo heslo!', 'warning')
     return render_template('login.html', title='Prihlaseni do Sledovace insolvece', form=form)
 
 

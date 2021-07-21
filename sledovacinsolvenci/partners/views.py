@@ -1,6 +1,5 @@
 from flask import render_template, url_for, flash, redirect, request, Blueprint, abort
 from flask_login import login_required, current_user
-from werkzeug.utils import secure_filename
 
 from sledovacinsolvenci.extensions import db
 from sledovacinsolvenci.partners.ares import get_ares_data, fill_partner_with_ares
@@ -20,7 +19,7 @@ def user_partners():
 @partners.get('/api')
 @login_required
 def api_partners():
-    query = Partner.query.filter(Partner.subscribers.contains(current_user))
+    query = Partner.query.filter(Partner.users.contains(current_user))
     all_user_partners = query.count()
     # search filter
     search = request.args.get('search[value]')
@@ -70,13 +69,14 @@ def create_partner():
     if form.validate_on_submit():
         partner = Partner.query.filter_by(ico=form.ico.data).first()
         if partner:
-            partner.subscribers.append(current_user)
-            partner.active = True
+            if current_user not in partner.users:
+                partner.users.append(current_user)
+                partner.active = True
         else:
             partner_ares = get_ares_data(form.ico.data)
             if partner_ares:
                 partner = fill_partner_with_ares(partner_ares)
-                partner.subscribers.append(current_user)
+                partner.users.append(current_user)
                 db.session.add(partner)
             else:
                 flash('Chyba v ICO', "warning")
@@ -95,33 +95,42 @@ def import_partners():
     form = ImportPartnerForm()
     if form.validate_on_submit():
         file = form.file.data
-        filename = secure_filename(file.filename)
         for line in file:
             line = line.strip().decode("utf-8")
             partner = Partner.query.filter_by(ico=line).first()
             if partner:
-                partner.subscribers.append(current_user)
-                partner.active = True
+                if current_user not in partner.users:
+                    partner.users.append(current_user)
+                    partner.active = True
             else:
                 partner_ares = get_ares_data(line)
                 if partner_ares:
                     partner = fill_partner_with_ares(partner_ares)
-                    partner.subscribers.append(current_user)
+                    partner.users.append(current_user)
                     db.session.add(partner)
             db.session.commit()
         return redirect(url_for('partners.user_partners'))
     return render_template('import_partners.html', title='Import partneru', form=form)
 
 
+@partners.get('/<int:partner_id>')
+@login_required
+def partner_detail(partner_id):
+    partner = Partner.query.get_or_404(partner_id)
+    if current_user not in partner.users:
+        abort(403)
+    return render_template('partner_detail.html', title='Detail partnera: {}'.format(partner.ico), partner=partner)
+
+
 @partners.post('/<int:partner_id>/delete')
 @login_required
 def delete_partner(partner_id):
     partner = Partner.query.get_or_404(partner_id)
-    if current_user not in partner.subscribers:
+    if current_user not in partner.users:
         abort(403)
     print(current_user.id)
-    partner.subscribers.remove(current_user)
-    if len(partner.subscribers) == 0:
+    partner.users.remove(current_user)
+    if len(partner.users) == 0:
         partner.active = False
     db.session.commit()
     flash('Partner {} smazan'.format(partner.name), 'success')

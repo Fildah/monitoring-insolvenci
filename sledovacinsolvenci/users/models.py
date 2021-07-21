@@ -2,7 +2,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from sledovacinsolvenci.extensions import db, login_manager
-from sledovacinsolvenci.partners.models import subscribers
+from sledovacinsolvenci.partners.models import user2partner
 
 
 @login_manager.user_loader
@@ -17,7 +17,7 @@ class User(db.Model, UserMixin):
     first_name = db.Column(db.String(64))
     last_name = db.Column(db.String(64))
     password = db.Column(db.String(128))
-    subscriptions = db.relationship('Partner', secondary=subscribers, backref=db.backref('subscribers'), lazy='dynamic')
+    partners = db.relationship('Partner', secondary=user2partner, backref=db.backref('users'), lazy='dynamic')
 
     def __init__(self, email, first_name, last_name, password):
         self.email = email

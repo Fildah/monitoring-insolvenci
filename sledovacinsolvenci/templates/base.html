@@ -18,45 +18,59 @@
   {% block csss %} {% endblock %}
 </head>
 <body class="d-flex flex-column min-vh-100">
-<header
-        class="
-        d-flex
-        flex-wrap
-        align-items-center
-        justify-content-center justify-content-md-between
-        py-3
-        mb-4
-        border-bottom
-      "
->
-  <div class="container">
-    <ul class="nav">
-      <li class="nav-link">
-        <a href="{{ url_for('core.index') }}">Domu</a>
-      </li>
-      <li class="nav-link">
-        <a href="{{ url_for('core.about') }}">O nas</a>
-      </li>
-      {% if current_user.is_authenticated %}
-      <li class="nav-link">
-        <a href="{{ url_for('partners.user_partners') }}">Partneri</a>
-      </li>
-      <li class="nav-link">
-        <a href="{{ url_for('users.account') }}">Ucet</a>
-      </li>
-      <li class="nav-link">
-        <a href="{{ url_for('users.logout') }}">Odhlasit</a>
-      </li>
-      {% else %}
-      <li class="nav-link">
-        <a href="{{ url_for('users.login') }}">Prihlasit</a>
-      </li>
-      <li class="nav-link">
-        <a href="{{ url_for('users.register') }}">Registrovat</a>
-      </li>
-      {% endif %}
-    </ul>
-  </div>
+<header class="navbar navbar-expand-md navbar-light bd-navbar bg-light border-bottom py-3 mb-4">
+    <nav class="container-xxl flex-wrap flex-md-nowrap">
+        <a class="navbar-brand" href="#"># TODO</a>
+        <button aria-controls="navbarCollapse" aria-expanded="false" aria-label="Menu" class="navbar-toggler"
+                data-bs-target="#navbarCollapse" data-bs-toggle="collapse" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav bd-navbar-nav pt-2 py-md-0">
+                <li class="nav-item col-6 col-md-auto">
+                    <a aria-current="page" class="nav-link active" href="{{ url_for('core.index') }}">Domů</a>
+                </li>
+                {% if current_user.is_authenticated %}
+                <li class="nav-item col-6 col-md-auto">
+                    <a class="nav-link" href="{{ url_for('partners.user_partners') }}">Partneři</a>
+                </li>
+                {% endif %}
+                <li class="nav-item col-6 col-md-auto">
+                    <a class="nav-link" href="{{ url_for('core.about') }}">O nás</a>
+                </li>
+            </ul>
+            <hr class="d-md-none text-white-50">
+            <ul class="navbar-nav flex-row flex-wrap ms-md-auto">
+                {% if current_user.is_authenticated %}
+                <li class="d-flex nav-item dropdown">
+                    <a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
+                       id="logedInNavbarDropdownMenuLink" role="button">
+                        {{ current_user.first_name }} {{ current_user.last_name }}
+                    </a>
+                    <ul aria-labelledby="logedInNavbarDropdownMenuLink" class="dropdown-menu dropdown-menu-lg-end"
+                        data-bs-popper="static">
+                        <li><a class="dropdown-item" href="{{ url_for('users.account') }}">Profil</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="{{ url_for('users.logout') }}">Odhlásit</a></li>
+                    </ul>
+                </li>
+                {% else %}
+                <li class="d-flex nav-item dropdown">
+                    <a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
+                       id="anonymNavbarDropdownMenuLink" role="button">
+                        Účet
+                    </a>
+                    <ul aria-labelledby="anonymNavbarDropdownMenuLink" class="dropdown-menu dropdown-menu-lg-end">
+                        <li><a class="dropdown-item" href="{{ url_for('users.login') }}">Přihlásit</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('users.register') }}">Registrovat</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
 </header>
 <main>
   <div class="container">

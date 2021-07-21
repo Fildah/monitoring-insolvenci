@@ -1,9 +1,10 @@
 from sledovacinsolvenci.extensions import db
+from sledovacinsolvenci.insolvency.models import partner2insolvency
 
-subscribers = db.Table('subscribers', db.Column('id', db.Integer, primary_key=True),
-                       db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
-                       db.Column('partner_id', db.Integer, db.ForeignKey('partners.id'))
-                       )
+user2partner = db.Table('user2partner', db.Column('id', db.Integer, primary_key=True),
+                        db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
+                        db.Column('partner_id', db.Integer, db.ForeignKey('partners.id'))
+                        )
 
 
 class Partner(db.Model):
@@ -24,6 +25,8 @@ class Partner(db.Model):
     zip_code = db.Column(db.String(5))
     country = db.Column(db.String(128))
     active = db.Column(db.Boolean, default=True)
+    insolvency = db.relationship('Partner', secondary=partner2insolvency, backref=db.backref('partners'),
+                                 lazy='dynamic')
 
     def __init__(self, ico, dic, name, state, created, closed, business_form, street, street_number, orientation_number,
                  city_part, city, zip_code, country):

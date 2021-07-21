@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="p-5 mb-4 bg-light rounded-3">
+    <h1>Partner ICO: {{ partner.ico }}</h1>
+</div>
+<div class="container">
+    <button class="btn btn-danger" data-bs-target="#deletePartner" data-bs-toggle="modal" type="button">
+        Smazat
+    </button>
+</div>
+<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="deletePartner" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Smazani partnera</h5>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+            </div>
+            <div class="modal-body">
+                Opravdu chcete smazat partnera?
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Ne</button>
+                <form action="{{ url_for('partners.delete_partner', partner_id=partner.id) }}" method="post">
+                    <input class="btn btn-danger" type="submit" value="Ano"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

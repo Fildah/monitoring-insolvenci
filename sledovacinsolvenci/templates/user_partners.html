@@ -7,24 +7,14 @@
     />
 {% endblock %}
 {% block content %}
-    <div class="row">
+    <div class="row mb-3">
         <div class="col">
-            <div class="p-5 mb-4 bg-light rounded-3">
-                <h1>
-                    Vsichni partneri pro uzivatele: {{ user.first_name }} {{ user.last_name }}
-                </h1>
-            </div>
-
-        </div>
-    </div>
-    <div class="row p-1">
-        <div class="col">
-            <div aria-label="controls" class="btn-group" role="group">
+            <div aria-label="controls" class="btn-group flex-wrap" role="group">
                 <form action="{{ url_for('partners.create_partner') }}" method="get">
-                    <input class="btn btn-success" type="submit" value="+ Pridat"/>
+                    <input class="btn btn-success" type="submit" value="+ Přidat"/>
                 </form>
                 <form action="{{ url_for('partners.import_partners') }}" method="get">
-                    <input class="btn btn-warning" type="submit" value="++ Pridat hromadne"/>
+                    <input class="btn btn-warning" type="submit" value="++ Přidat hromadně"/>
                 </form>
             </div>
         </div>
@@ -35,11 +25,11 @@
                 <table class="table table-hover" id="data" style="width: 100%;">
                     <thead class="table-light">
                     <tr>
-                        <th>ICO</th>
-                        <th>DIC</th>
-                        <th>Nazev</th>
-                        <th>Forma podnikani</th>
-                        <th>Stav podnikani</th>
+                        <th>IČO</th>
+                        <th>DIČ</th>
+                        <th>Název společnosti</th>
+                        <th>Forma podnikání</th>
+                        <th>Stav podnikání</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -60,7 +50,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ne</button>
-                    <form id="delete-form" action="/1/delete" method="post">
+                    <form id="delete-form" action="#" method="post">
                         <input class="btn btn-danger" type="submit" value="Ano"/>
                     </form>
                 </div>
@@ -68,23 +58,23 @@
         </div>
     </div>
 {% endblock %} {% block scripts %}
-<script
-        src="https://code.jquery.com/jquery-3.6.0.min.js"
-        type="text/javascript"
-></script>
-<script
-        src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"
-        type="text/javascript"
-></script>
-<script
-        src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"
-        type="text/javascript"
-></script>
-<script
-        src="{{ url_for('static', filename='scripts/user_partners.js') }}"
-        type="text/javascript"
-></script>
-<script>
+    <script
+            src="https://code.jquery.com/jquery-3.6.0.min.js"
+            type="text/javascript"
+    ></script>
+    <script
+            src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"
+            type="text/javascript"
+    ></script>
+    <script
+            src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"
+            type="text/javascript"
+    ></script>
+    <script
+            src="{{ url_for('static', filename='js/user_partners.js') }}"
+            type="text/javascript"
+    ></script>
+    <script>
         $(document).ready(function () {
             const table = $("#data").DataTable({
                 "language": {
@@ -96,7 +86,7 @@
                     {data: "ico"},
                     {data: "dic"},
                     {data: "name"},
-                    {data: "business_form"},
+                    {data: "business_form", orderable: false},
                     {data: "state"},
                     {
                         data: null,
@@ -117,7 +107,7 @@
                     tr.addClass('shown');
                 }
             });
-            $('#data').on('click', 'td.editor-delete', function () {
+            $('#data').on('click', 'td.editor-delete', function (e) {
                 e.preventDefault();
                 var tr = $(this).closest('tr');
                 var row = table.row(tr);

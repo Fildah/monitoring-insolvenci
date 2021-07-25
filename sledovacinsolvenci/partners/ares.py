@@ -21,7 +21,7 @@ def get_ares_data(ico):
         if 'D:ROR' in ares_vbas:
             partner_data['state'] = ares_vbas['D:ROR']['D:SOR']['D:SSU']
         else:
-            partner_data['state'] = None
+            partner_data['state'] = 'Neaktivní'
         partner_data['created'] = ares_vbas['D:DV']
         partner_data['closed'] = None
         partner_data['business_form'] = ares_vbas['D:PF']['D:NPF']
@@ -63,8 +63,8 @@ def fill_partner_with_ares(partner_ares):
         dic=partner_ares['dic'],
         name=partner_ares['name'],
         state=partner_ares['state'],
-        created=partner_ares['created'],
-        closed=partner_ares['closed'],
+        business_started=partner_ares['created'],
+        business_ended=partner_ares['closed'],
         business_form=partner_ares['business_form'],
         street=partner_ares['street'],
         street_number=partner_ares['street_number'],

@@ -16,9 +16,9 @@ def register():
                     password=form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('Dekujeme za registraci', 'success')
-        return redirect(url_for('users.login'))
-    return render_template('register.html', title='Registrace do Sledovace insolvece', form=form)
+        flash('Děkujeme za registraci.', 'success')
+        return redirect(url_for('partners.user_partners'))
+    return render_template('register.html', title='Registrace', form=form)
 
 
 @users.route('/login', methods=['GET', 'POST'])
@@ -28,19 +28,20 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user is not None and user.password_check(form.password.data):
             login_user(user)
-            flash('Uspesne prihlaseni', 'success')
             next_page = request.args.get('next')
             if next_page is None or not next_page[0] == '/':
                 next_page = url_for('core.index')
+            flash('Byly jste úspěšně přihlášeni.', 'success')
             return redirect(next_page)
         else:
             flash('Chybný email nebo heslo!', 'warning')
-    return render_template('login.html', title='Prihlaseni do Sledovace insolvece', form=form)
+    return render_template('login.html', title='Přihlášení', form=form)
 
 
 @users.route('/logout')
 def logout():
     logout_user()
+    flash('Byly jste úspěšně odhlášeni.', 'success')
     return redirect(url_for('core.index'))
 
 
@@ -53,12 +54,12 @@ def account():
         current_user.first_name = form.first_name.data
         current_user.last_name = form.last_name.data
         db.session.commit()
-        flash('Uzivatelsky ucet byl aktualizovan', 'success')
+        flash('Uživatelský účet byl aktualizován.', 'success')
         return redirect(url_for('users.account'))
     elif request.method == 'GET':
         form.email.data = current_user.email
         form.first_name.data = current_user.first_name
         form.last_name.data = current_user.last_name
     return render_template('account.html',
-                           title='Uzivatelsky ucet: {} {}'.format(current_user.first_name, current_user.last_name),
+                           title='Uživatelský účet: {} {}'.format(current_user.first_name, current_user.last_name),
                            form=form)

@@ -4,7 +4,7 @@ function format(d) {
         '<td class="align-top">' +
         '<div class="card" style="width: 18rem;">' +
         '<div class="card-body">' +
-        '<h5 class="card-title">Adresa sidla</h5>' +
+        '<h5 class="card-title">Adresa sídla</h5>' +
         '<ul class="list-group list-group-flush">' +
         '<li class="list-group-item">' + d.street + ' ' + d.street_number + '/' + d.orientation_number + '</li>' +
         '<li class="list-group-item">' + d.city_part + '</li>' +
@@ -20,7 +20,7 @@ function format(d) {
         '<div class="card-body">' +
         '<h5 class="card-title">Obecné informace</h5>' +
         '<ul class="list-group list-group-flush">' +
-        '<li class="list-group-item">Založeno: ' + d.created + '</li>' +
+        '<li class="list-group-item">Založeno: ' + d.business_started + '</li>' +
         '<li class="list-group-item">Stav podnikání: ' + d.state + '</li>' +
         '<li class="list-group-item">Právní forma: ' + d.business_form + '</li>' +
         '</ul>' +

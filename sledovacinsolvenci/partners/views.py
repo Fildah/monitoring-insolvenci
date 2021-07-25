@@ -12,7 +12,7 @@ partners = Blueprint('partners', __name__)
 @partners.get('/')
 @login_required
 def user_partners():
-    return render_template('user_partners.html', title='Sledovani partneri', user=current_user)
+    return render_template('user_partners.html', title='Sledovaní partneři', user=current_user)
 
 
 # TODO Presunout do API
@@ -21,39 +21,37 @@ def user_partners():
 def api_partners():
     query = Partner.query.filter(Partner.users.contains(current_user))
     all_user_partners = query.count()
-    # search filter
     search = request.args.get('search[value]')
     if search:
         query = query.filter(db.or_(
             Partner.ico.like('%{}%'.format(search)),
-            Partner.name.like('%{}%'.format(search))
+            Partner.dic.like('%{}%'.format(search)),
+            Partner.name.like('%{}%'.format(search)),
+            Partner.business_form.like('%{}%'.format(search)),
+            Partner.state.like('%{}%'.format(search))
         ))
     total_filtered = query.count()
     # sorting
-    #  order = []
-    #  i = 0
-    #  while True:
-    #      col_index = request.args.get(f'order[{i}][column]')
-    #      if col_index is None:
-    #          break
-    #      col_name = request.args.get(f'columns[{col_index}][data]')
-    #      if col_name not in ['name', 'age', 'email']:
-    #          col_name = 'name'
-    #      descending = request.args.get(f'order[{i}][dir]') == 'desc'
-    #      col = getattr(User, col_name)
-    #      if descending:
-    #          col = col.desc()
-    #      order.append(col)
-    #      i += 1
-    #  if order:
-    #      query = query.order_by(*order)
-
-    # pagination
+    order = []
+    i = 0
+    while True:
+        col_index = request.args.get(f'order[{i}][column]')
+        if col_index is None:
+            break
+        col_name = request.args.get(f'columns[{col_index}][data]')
+        if col_name not in ['ico', 'dic', 'name', 'state']:
+            col_name = 'name'
+        descending = request.args.get(f'order[{i}][dir]') == 'desc'
+        col = getattr(Partner, col_name)
+        if descending:
+            col = col.desc()
+        order.append(col)
+        i += 1
+    if order:
+        query = query.order_by(*order)
     start = request.args.get('start', type=int)
     length = request.args.get('length', type=int)
     query = query.offset(start).limit(length)
-
-    # response
     return {
         'data': [partner.to_dict() for partner in query],
         'recordsFiltered': total_filtered,
@@ -79,14 +77,14 @@ def create_partner():
                 partner.users.append(current_user)
                 db.session.add(partner)
             else:
-                flash('Chyba v ICO', "warning")
-                return render_template('create_partner.html', title='Vytvoreni partnera', form=form)
+                flash('Chyba IČO, nebo problém ve zpracování.', "warning")
+                return render_template('create_partner.html', title='Vytvoření partnera', form=form)
         db.session.commit()
-        flash('Partner vytvoren', 'success')
+        flash('Partner vytvořen.', 'success')
         return redirect(url_for('partners.partner_detail', partner_id=partner.id))
     elif request.method != 'GET':
-        flash('Chyba v ICO', "warning")
-    return render_template('create_partner.html', title='Vytvoreni partnera', form=form)
+        flash('Chyba IČO, nebo problém ve zpracování.', "warning")
+    return render_template('create_partner.html', title='Vytvoření partnera', form=form)
 
 
 @partners.route('/import', methods=['GET', 'POST'])
@@ -110,7 +108,7 @@ def import_partners():
                     db.session.add(partner)
             db.session.commit()
         return redirect(url_for('partners.user_partners'))
-    return render_template('import_partners.html', title='Import partneru', form=form)
+    return render_template('import_partners.html', title='Import partnerů', form=form)
 
 
 @partners.get('/<int:partner_id>')
@@ -133,5 +131,5 @@ def delete_partner(partner_id):
     if len(partner.users) == 0:
         partner.active = False
     db.session.commit()
-    flash('Partner {} smazan'.format(partner.name), 'success')
+    flash('Partner {} smazán.'.format(partner.name), 'success')
     return redirect(url_for('partners.user_partners'))

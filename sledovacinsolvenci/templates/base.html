@@ -28,7 +28,7 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav bd-navbar-nav pt-2 py-md-0">
                 <li class="nav-item col-6 col-md-auto">
-                    <a aria-current="page" class="nav-link active" href="{{ url_for('core.index') }}">Domů</a>
+                    <a aria-current="page" class="nav-link" href="{{ url_for('core.index') }}">Domů</a>
                 </li>
                 {% if current_user.is_authenticated %}
                     <li class="nav-item col-6 col-md-auto">

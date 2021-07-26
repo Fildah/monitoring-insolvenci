@@ -17,6 +17,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash('Děkujeme za registraci.', 'success')
+        login_user(user)
         return redirect(url_for('partners.user_partners'))
     return render_template('register.html', title='Registrace', form=form)
 

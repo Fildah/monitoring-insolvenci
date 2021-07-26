@@ -111,7 +111,8 @@ def import_partners():
     return render_template('import_partners.html', title='Import partnerů', form=form)
 
 
-@partners.get('/<int:partner_id>')
+@partners.get('/detail/', defaults={'partner_id': ''})
+@partners.route('/detail/<int:partner_id>', methods=['GET', 'POST'])
 @login_required
 def partner_detail(partner_id):
     partner = Partner.query.get_or_404(partner_id)
@@ -120,7 +121,7 @@ def partner_detail(partner_id):
     return render_template('partner_detail.html', title='Detail partnera: {}'.format(partner.ico), partner=partner)
 
 
-@partners.post('/<int:partner_id>/delete')
+@partners.post('/detail/<int:partner_id>/delete')
 @login_required
 def delete_partner(partner_id):
     partner = Partner.query.get_or_404(partner_id)

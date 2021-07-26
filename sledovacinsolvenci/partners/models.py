@@ -16,8 +16,8 @@ class Partner(db.Model):
     dic = db.Column(db.String(20))
     name = db.Column(db.String(128), index=True)
     state = db.Column(db.String(30))
-    business_started = db.Column(db.Date)
-    business_ended = db.Column(db.Date)
+    business_start = db.Column(db.Date)
+    business_end = db.Column(db.Date)
     business_form = db.Column(db.String(50))
     street = db.Column(db.String(128))
     street_number = db.Column(db.String(6))
@@ -29,18 +29,18 @@ class Partner(db.Model):
     created = db.Column(db.DateTime, nullable=False)
     modified = db.Column(db.DateTime, nullable=False)
     active = db.Column(db.Boolean, default=True)
-    insolvencies = db.relationship('Insolvency', secondary=partner2insolvency, backref=db.backref('partners'),
+    insolvencies = db.relationship('Insolvency', secondary=partner2insolvency, backref=db.backref('partner'),
                                    lazy='dynamic')
 
-    def __init__(self, ico, dic, name, state, business_started, business_ended, business_form, street, street_number,
+    def __init__(self, ico, dic, name, state, business_start, business_end, business_form, street, street_number,
                  orientation_number,
                  city_part, city, zip_code, country):
         self.ico = ico
         self.dic = dic
         self.name = name
         self.state = state
-        self.business_started = business_started
-        self.business_ended = business_ended
+        self.business_start = business_start
+        self.business_end = business_end
         self.business_form = business_form
         self.street = street
         self.street_number = street_number
@@ -54,16 +54,21 @@ class Partner(db.Model):
         self.active = True
 
     def to_dict(self):
-        if self.business_ended is not None:
-            self.business_ended = self.business_ended.strftime("%d.%m.%Y")
+        insolvency_count = 0
+
+        if self.business_end is not None:
+            self.business_end = self.business_end.strftime("%d.%m.%Y")
+        if self.insolvencies is not None:
+            for insolvency in self.insolvencies:
+                insolvency_count += 1
         return {
             'id': self.id,
             'ico': self.ico,
             'dic': self.dic,
             'name': self.name,
             'state': self.state,
-            'business_started': self.business_started.strftime("%d.%m.%Y"),
-            'business_ended': self.business_ended,
+            'business_start': self.business_start.strftime("%d.%m.%Y"),
+            'business_end': self.business_end,
             'business_form': self.business_form,
             'street': self.street,
             'street_number': self.street_number,

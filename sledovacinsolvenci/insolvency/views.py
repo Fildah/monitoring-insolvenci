@@ -1,4 +1,4 @@
-from flask import render_template, Blueprint
+from flask import render_template, Blueprint, request
 from flask_login import login_required, current_user
 
 from sledovacinsolvenci.extensions import db
@@ -12,7 +12,52 @@ insolvencies = Blueprint('insolvencies', __name__)
 @insolvencies.get('/')
 @login_required
 def user_insolvencies():
-    return render_template('user_partners.html', title='Sledovaní partneři', user=current_user)
+    return render_template('user_insolvencies.html', title='Sledované insolvence partnerů', user=current_user)
+
+
+# TODO Presunout do API
+@insolvencies.get('/api')
+@login_required
+def api_insolvencies():
+    query = Insolvency.query.filter(Insolvency.partner.any(Partner.users.contains(current_user)))
+    all_user_insolvencies = query.count()
+    search = request.args.get('search[value]')
+    if search:
+        query = query.filter(db.or_(
+            Insolvency.ico.like('%{}%'.format(search)),
+            Insolvency.case.like('%{}%'.format(search)),
+            Insolvency.state.like('%{}%'.format(search)),
+            Insolvency.bankruptcy_start.like('%{}%'.format(search)),
+            Insolvency.bankruptcy_end.like('%{}%'.format(search))
+        ))
+    total_filtered = query.count()
+    # sorting
+    order = []
+    i = 0
+    while True:
+        col_index = request.args.get(f'order[{i}][column]')
+        if col_index is None:
+            break
+        col_name = request.args.get(f'columns[{col_index}][data]')
+        if col_name not in ['ico', 'state', 'bankruptcy_start', 'bankruptcy_end']:
+            col_name = 'name'
+        descending = request.args.get(f'order[{i}][dir]') == 'desc'
+        col = getattr(Insolvency, col_name)
+        if descending:
+            col = col.desc()
+        order.append(col)
+        i += 1
+    if order:
+        query = query.order_by(*order)
+    start = request.args.get('start', type=int)
+    length = request.args.get('length', type=int)
+    query = query.offset(start).limit(length)
+    return {
+        'data': [insolvency.to_dict() for insolvency in query],
+        'recordsFiltered': total_filtered,
+        'recordsTotal': all_user_insolvencies,
+        'draw': request.args.get('draw', type=int),
+    }
 
 
 @insolvencies.cli.command()
@@ -22,9 +67,13 @@ def update_insolvencies():
     for partner in all_partners:
         insolvencies_for_ico = isir.get_ico_insolvencies(partner.ico)
         for insolvency_data in insolvencies_for_ico:
-            existing_insolvencies = Insolvency.query.filter_by(ico=partner.ico, case=insolvency_data['bcVec']).first()
-            if partner.insolvencies is not None and existing_insolvencies is None:
-                insolvency = fill_insolvency_with_isir(insolvency_data)
-                insolvency.partners.append(partner)
-                db.session.add(insolvency)
+            existing_insolvency = Insolvency.query.filter_by(ico=partner.ico, case=insolvency_data['bcVec'],
+                                                             year=insolvency_data['rocnik']).first()
+            if partner.insolvencies is not None:
+                if existing_insolvency is None:
+                    insolvency = fill_insolvency_with_isir(insolvency_data)
+                    insolvency.partner.append(partner)
+                    db.session.add(insolvency)
+                else:
+                    existing_insolvency.update_insolvency(insolvency_data)
         db.session.commit()

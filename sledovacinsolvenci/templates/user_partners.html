@@ -29,8 +29,7 @@
                         <th>DIČ</th>
                         <th>Název společnosti</th>
                         <th>Forma podnikání</th>
-                        <th>Stav podnikání</th>
-                        <th></th>
+                        <th>Stav</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -43,7 +42,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Smazani partnera</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Smazání partnera</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div id="delete-text" class="modal-body">
@@ -83,27 +82,30 @@
                 },
                 ajax: "{{ url_for('partners.api_partners') }}",
                 serverSide: true,
-                columns: [
-                    {data: "ico"},
-                    {data: "dic"},
-                    {data: "name"},
-                    {data: "business_form", orderable: false},
-                    {data: "state"},
-                    {data: "id",
-                    render: function ( data, type, row) {
-                        return '<form action="{{ url_for('partners.partner_detail') }}' + data + '"method="post" target="_blank"><input class="btn btn-primary" type="submit" value="Detail" /></form>';
-                    },
-                        orderable: false
-                    },
-                    {
-                        data: null,
-                        className: "dt-center editor-delete",
-                        defaultContent: '<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deletePartner">Smazat</button>',
-                        orderable: false
+                createdRow: function (row, data, dataIndex) {
+                    if (data.insolvency_count > 0) {
+                        $(row).addClass('table-danger');
                     }
+                },
+                autoWidth: false,
+                columns: [
+                    {data: "ico", width: '8%'},
+                    {data: "dic", width: '8%'},
+                    {data: "name", width: '39%'},
+                    {data: "business_form", width: '25%', orderable: false},
+                    {data: "state", width: '5%'},
+                    {
+                        data: "id",
+                        width: '50px',
+                        className: "",
+                        render: function (data, type, row) {
+                            return '<div aria-label="controls" class="btn-group flex-wrap" role="group"><form action="{{ url_for('partners.partner_detail') }}' + data + '"method="post" target="_blank"><input class="btn btn-primary" type="submit" value="Detail" /></form><button type="button" class="btn btn-danger editor-delete" data-bs-toggle="modal" data-bs-target="#deletePartner">Smazat</button></div>';
+                        },
+                        orderable: false
+                    },
                 ],
             });
-            $('#data tbody').on('click', 'tr', function (e) {
+            $('#data tbody').on('click', 'tr.even, tr.odd', function (e) {
                 var tr = $(this);
                 var row = table.row(tr);
                 if (row.child.isShown()) {
@@ -114,12 +116,11 @@
                     tr.addClass('shown');
                 }
             });
-            $('#data').on('click', 'td.editor-delete', function (e) {
-                e.preventDefault();
+            $('#data').on('click', 'button.editor-delete', function (e) {
                 var tr = $(this).closest('tr');
                 var row = table.row(tr);
                 document.getElementById("delete-text").innerHTML = "Opravdu chcete smazat partnera " + row.data().name + " ?";
-                document.getElementById("delete-form").action = "/partners/" + row.data().id + "/delete";
+                document.getElementById("delete-form").action = row.data().del_link;
             });
         });
     </script>

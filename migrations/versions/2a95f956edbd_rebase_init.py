@@ -1,15 +1,15 @@
-"""empty message
+"""rebase init
 
-Revision ID: 95f9248a484b
+Revision ID: 2a95f956edbd
 Revises: 
-Create Date: 2021-07-26 10:53:50.190021
+Create Date: 2021-07-26 16:18:33.976711
 
 """
 import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision = '95f9248a484b'
+revision = '2a95f956edbd'
 down_revision = None
 branch_labels = None
 depends_on = None

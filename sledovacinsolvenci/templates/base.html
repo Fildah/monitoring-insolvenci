@@ -50,12 +50,8 @@
                            id="logedInNavbarDropdownMenuLink" role="button">
                             {{ current_user.first_name }} {{ current_user.last_name }}
                         </a>
-                        <ul aria-labelledby="logedInNavbarDropdownMenuLink" class="dropdown-menu dropdown-menu-lg-end"
-                            data-bs-popper="static">
+                        <ul aria-labelledby="logedInNavbarDropdownMenuLink" class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="{{ url_for('users.account') }}">Profil</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
                             <li><a class="dropdown-item" href="{{ url_for('users.logout') }}">Odhlásit</a></li>
                         </ul>
                     </li>

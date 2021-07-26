@@ -1,12 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
+    <h3 class="mb-3">Registrační formulář</h3>
     <form method="POST">
         {{ form.hidden_tag() }}
-        {{ form.email.label }}{{ form.email }}<br>
-        {{ form.first_name.label }}{{ form.first_name }}<br>
-        {{ form.last_name.label }}{{ form.last_name }}<br>
-        {{ form.password.label }}{{ form.password }}<br>
-        {{ form.password_confirm.label }}{{ form.password_confirm }}<br>
-        {{ form.submit }}
+        {{ form.first_name.label(class="form-label") }}
+        {{ form.first_name(type="text", class="form-control") }}
+        {{ form.last_name.label(class="form-label") }}
+        {{ form.last_name(type="text", class="form-control") }}
+        {{ form.email.label(class="form-label") }}
+        {{ form.email(type="email", class="form-control", placeholder="name@example.com") }}
+        {{ form.password.label(class="form-label") }}
+        {{ form.password(type="password", class="form-control") }}
+        {{ form.password_confirm.label(class="form-label") }}
+        {{ form.password_confirm(type="password", class="form-control") }}
+        {{ form.submit(class="btn btn-primary") }}
     </form>
 {% endblock %}

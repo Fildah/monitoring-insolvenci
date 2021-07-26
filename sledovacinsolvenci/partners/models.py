@@ -1,5 +1,7 @@
 import datetime
 
+from flask import url_for
+
 from sledovacinsolvenci.extensions import db
 from sledovacinsolvenci.insolvency.models import partner2insolvency
 
@@ -54,13 +56,37 @@ class Partner(db.Model):
         self.active = True
 
     def to_dict(self):
-        insolvency_count = 0
-
         if self.business_end is not None:
-            self.business_end = self.business_end.strftime("%d.%m.%Y")
-        if self.insolvencies is not None:
+            business_end = self.business_end.strftime("%d.%m.%Y")
+        else:
+            business_end = "Ne"
+        insolvency_count = 0
+        insolvency_last_start = "Bez insolvence"
+        insolvency_last_end = "Bez insolvence"
+        insolvency_last_state = "Bez insolvence"
+        if self.insolvencies.count() != 0:
             for insolvency in self.insolvencies:
+                if insolvency_count == 0:
+                    insolvency_last_start = insolvency.bankruptcy_start
+                    insolvency_last_state = insolvency.state
+                    if insolvency.bankruptcy_end is not None:
+                        insolvency_last_end = insolvency.bankruptcy_end
+                else:
+                    if insolvency_last_start < insolvency.bankruptcy_start:
+                        insolvency_last_start = insolvency.bankruptcy_start
+                        insolvency_last_state = insolvency.state
+                    if insolvency.bankruptcy_end < insolvency.bankruptcy_end:
+                        insolvency_last_end = insolvency.bankruptcy_end
                 insolvency_count += 1
+            insolvency_last_start = insolvency_last_start.strftime("%d.%m.%Y")
+            insolvency_last_end = insolvency_last_end.strftime("%d.%m.%Y")
+
+        if self.street:
+            street_address = "{} {}".format(self.street, self.street_number)
+        else:
+            street_address = "{} {}".format(self.city, self.street_number)
+        if self.orientation_number:
+            street_address = street_address + "/{}".format(self.orientation_number)
         return {
             'id': self.id,
             'ico': self.ico,
@@ -68,15 +94,18 @@ class Partner(db.Model):
             'name': self.name,
             'state': self.state,
             'business_start': self.business_start.strftime("%d.%m.%Y"),
-            'business_end': self.business_end,
+            'business_end': business_end,
             'business_form': self.business_form,
-            'street': self.street,
-            'street_number': self.street_number,
-            'orientation_number': self.orientation_number,
+            'street_address': street_address,
             'city_part': self.city_part,
             'city': self.city,
             'zip_code': self.zip_code,
             'country': self.country,
+            'del_link': url_for('partners.delete_partner', partner_id=self.id),
+            'insolvency_count': insolvency_count,
+            'insolvency_last_start': insolvency_last_start,
+            'insolvency_last_end': insolvency_last_end,
+            'insolvency_last_state': insolvency_last_state,
             'created': self.created,
-            'modified': self.modified,
+            'modified': self.modified
         }

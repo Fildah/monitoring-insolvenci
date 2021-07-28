@@ -16,10 +16,14 @@ def user_insolvencies():
 
 
 # TODO Presunout do API
-@insolvencies.get('/api')
+@insolvencies.get('/api', defaults={'partner_id': None})
+@insolvencies.get('/api/<int:partner_id>')
 @login_required
-def api_insolvencies():
-    query = Insolvency.query.filter(Insolvency.partner.any(Partner.users.contains(current_user)))
+def api_insolvencies(partner_id):
+    if partner_id is not None:
+        query = Insolvency.query.filter(Insolvency.partner.any(Partner.id.in_([partner_id])))
+    else:
+        query = Insolvency.query.filter(Insolvency.partner.any(Partner.users.contains(current_user)))
     all_user_insolvencies = query.count()
     search = request.args.get('search[value]')
     if search:

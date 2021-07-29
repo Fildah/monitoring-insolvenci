@@ -9,7 +9,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: example
       MYSQL_DATABASE: sledovacinsolvenci
-
   adminer:
     image: adminer
     restart: always

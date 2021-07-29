@@ -5,10 +5,10 @@ from wtforms.validators import DataRequired, Length
 
 
 class PartnerForm(FlaskForm):
-    ico = StringField('ICO', validators=[DataRequired(), Length(max=8)])
-    submit = SubmitField('Zalozit')
+    ico = StringField('IČO', validators=[DataRequired(), Length(max=8)])
+    submit = SubmitField('Založit')
 
 
 class ImportPartnerForm(FlaskForm):
     file = FileField('Soubor', validators=[FileRequired(), FileAllowed(['txt'], 'Jen txt soubor!')])
-    submit = SubmitField('Pridat partnery ze souboru')
+    submit = SubmitField('Přidat partnery ze souboru')

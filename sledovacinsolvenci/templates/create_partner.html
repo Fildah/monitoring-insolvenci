@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
-    <form class="row g-3" method="POST">
+<div class="container text-center" style="max-width: 400px;">
+    <h3 class="mb-3">Vytvoření partnera</h3>
+    <form method="POST">
         {{ form.hidden_tag() }}
-        <div class="col-md-4">
-            {{ form.ico.label(class_='form-label') }}
-            <br>
-            {{ form.ico }}
+        <div class="form-floating mb-3">
+            {{ form.ico(type="text", class="form-control", placeholder="00000000") }}
+            {{ form.ico.label(class='form-label') }}
         </div>
-        <div class="col-12">
-            {{ form.submit }}
-        </div>
+        {{ form.submit(class="btn btn-primary btn-lg") }}
     </form>
+</div>
 {% endblock %}

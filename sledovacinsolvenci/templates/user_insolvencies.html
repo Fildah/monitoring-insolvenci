@@ -1,25 +1,25 @@
 {% extends "base.html" %}
 {% block csss %}
-<link
-        href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.min.css"
-        rel="stylesheet"
-        type="text/css"
-/>
+    <link
+            href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.min.css"
+            rel="stylesheet"
+            type="text/css"
+    />
 {% endblock %}
 {% block content %}
-<div class="p-5 mb-4 bg-light rounded-3">
-    <h1>Insolvence sledovaných partnerů</h1>
-</div>
-<div class="table-responsive">
-    <table class="table table-hover" id="data" style="width: 100%;">
-        <thead class="table-light">
-        <tr>
-            <th>IČO</th>
-            <th>Spisová značka</th>
-            <th>Stav insolvence</th>
-            <th>Zahájení úpadku</th>
-            <th>Ukončení úpadku</th>
-            <th></th>
+    <div class="p-5 mb-4 bg-light rounded-3">
+        <h1>Insolvence sledovaných partnerů</h1>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover" id="data" style="width: 100%;">
+            <thead class="table-light">
+            <tr>
+                <th>IČO</th>
+                <th>Spisová značka</th>
+                <th>Stav insolvence</th>
+                <th>Zahájení úpadku</th>
+                <th>Ukončení úpadku</th>
+                <th></th>
             </tr>
             </thead>
             <tbody></tbody>
@@ -48,7 +48,7 @@
                 "language": {
                     "url": '//cdn.datatables.net/plug-ins/1.10.25/i18n/Czech.json'
                 },
-                ajax: "{{ url_for('insolvencies.api_insolvencies') }}",
+                ajax: "{{ url_for('api_v1.insolvencies') }}",
                 serverSide: true,
                 autoWidth: false,
                 columns: [

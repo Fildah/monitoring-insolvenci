@@ -1,25 +1,25 @@
 {% extends "base.html" %}
 {% block csss %}
-<link
-        href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.min.css"
-        rel="stylesheet"
-        type="text/css"
-/>
+    <link
+            href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.min.css"
+            rel="stylesheet"
+            type="text/css"
+    />
 {% endblock %}
 {% block content %}
-<div class="p-5 mb-4 bg-light rounded-3">
-    <h1>Sledovaní partneři</h1>
-</div>
-<div class="row mb-3">
-    <div class="col">
-        <div aria-label="controls" class="btn-group flex-wrap" role="group">
-            <form action="{{ url_for('partners.create_partner') }}" method="get">
-                <input class="btn btn-success" type="submit" value="+ Přidat"/>
-            </form>
-            <form action="{{ url_for('partners.import_partners') }}" method="get">
-                <input class="btn btn-warning" type="submit" value="++ Přidat hromadně"/>
-            </form>
-        </div>
+    <div class="p-5 mb-4 bg-light rounded-3">
+        <h1>Sledovaní partneři</h1>
+    </div>
+    <div class="row mb-3">
+        <div class="col">
+            <div aria-label="controls" class="btn-group flex-wrap" role="group">
+                <form action="{{ url_for('partners.create_partner') }}" method="get">
+                    <input class="btn btn-success" type="submit" value="+ Přidat"/>
+                </form>
+                <form action="{{ url_for('partners.import_partners') }}" method="get">
+                    <input class="btn btn-warning" type="submit" value="++ Přidat hromadně"/>
+                </form>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -84,7 +84,7 @@
                 "language": {
                     "url": '//cdn.datatables.net/plug-ins/1.10.25/i18n/Czech.json'
                 },
-                ajax: "{{ url_for('partners.api_partners') }}",
+                ajax: "{{ url_for('api_v1.partners') }}",
                 serverSide: true,
                 createdRow: function (row, data, dataIndex) {
                     if (data.insolvency_count > 0) {

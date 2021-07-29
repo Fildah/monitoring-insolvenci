@@ -25,7 +25,7 @@
                     <td>IČO</td>
                     <td>{{ partner.ico }}</td>
                 </tr>
-                {% if partner.dic %} }}
+                {% if partner.dic %}
                     <tr scope="row">
                         <td>DIČ</td>
                         <td>{{ partner.dic }}</td>
@@ -39,7 +39,7 @@
                     <td>Datum vzniku</td>
                     <td>{{ partner.business_start.strftime("%d.%m.%Y") }}</td>
                 </tr>
-                {% if partner.dic %} }}
+                {% if partner.business_end %}
                     <tr scope="row">
                         <td>Datum zániku</td>
                         <td>{{ partner.business_end.strftime("%d.%m.%Y") }}</td>
@@ -62,7 +62,7 @@
                 <tbody>
                 <tr scope="row">
                     <td>Ulice</td>
-                    {% if partner.street %} }}
+                    {% if partner.street %}
                         <td>{{ partner.street }}</td>
                     {% else %}
                         <td>{{ partner.city }}</td>
@@ -72,7 +72,7 @@
                     <td>ČP</td>
                     <td>{{ partner.street_number }}</td>
                 </tr>
-                {% if partner.orientation_number %} }}
+                {% if partner.orientation_number %}
                     <tr scope="row">
                         <td>ČO</td>
                         <td>{{ partner.orientation_number }}</td>
@@ -159,7 +159,7 @@
                 "language": {
                     "url": '//cdn.datatables.net/plug-ins/1.10.25/i18n/Czech.json'
                 },
-                ajax: "{{ url_for('insolvencies.api_insolvencies', partner_id=partner.id ) }}",
+                ajax: "{{ url_for('api_v1.insolvencies', partner_id=partner.id ) }}",
                 serverSide: true,
                 autoWidth: false,
                 columns: [

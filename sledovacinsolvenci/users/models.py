@@ -1,8 +1,10 @@
 import datetime
 
+import jwt
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from sledovacinsolvenci import config
 from sledovacinsolvenci.extensions import db, login_manager
 from sledovacinsolvenci.partners.models import user2partner
 
@@ -21,6 +23,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(128))
     created = db.Column(db.DateTime, nullable=False)
     modified = db.Column(db.DateTime, nullable=False)
+    token = db.Column(db.String(512), default=None)
     partners = db.relationship('Partner', secondary=user2partner, backref=db.backref('users'), lazy='dynamic')
 
     def __init__(self, email, first_name, last_name, password):
@@ -33,3 +36,15 @@ class User(db.Model, UserMixin):
 
     def password_check(self, password):
         return check_password_hash(self.password, password)
+
+    def generate_jwt(self):
+        token = jwt.encode({"user_id": self.id}, config.SECRET_KEY, algorithm="HS256")
+        self.token = token
+        db.session.commit()
+        return token
+
+    def jwt_check(self, token):
+        if self.token == token:
+            return True
+        else:
+            return False

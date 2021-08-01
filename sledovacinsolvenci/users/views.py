@@ -1,6 +1,7 @@
-from flask import render_template, url_for, flash, redirect, request, Blueprint
+from flask import render_template, url_for, flash, redirect, request, Blueprint, Markup
 from flask_login import login_user, current_user, logout_user, login_required
 
+from sledovacinsolvenci.emails.email_sender import send_email
 from sledovacinsolvenci.extensions import db
 from sledovacinsolvenci.users.forms import RegistrationForm, LoginForm, UpdateUserForm
 from sledovacinsolvenci.users.models import User
@@ -16,7 +17,9 @@ def register():
                     password=form.password.data)
         db.session.add(user)
         db.session.commit()
+        # TODO Registracni email s overenim emailu
         flash('Děkujeme za registraci.', 'success')
+        send_email(user.email, 'Úspěšná registrace', 'email/register_email')
         login_user(user)
         return redirect(url_for('partners.user_partners'))
     return render_template('register.html', title='Registrace', form=form)
@@ -35,7 +38,9 @@ def login():
             flash('Byly jste úspěšně přihlášeni.', 'success')
             return redirect(next_page)
         else:
-            flash('Chybný email nebo heslo!', 'warning')
+            flash(Markup(
+                'Chybný email nebo heslo! Pokud ještě účet nemáte, neváhejte se <a href="{}" class="alert-link">registrovat</a>!'.format(
+                    url_for('users.register'))), 'danger')
     return render_template('login.html', title='Přihlášení', form=form)
 
 

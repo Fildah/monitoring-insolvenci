@@ -84,7 +84,7 @@
                 "language": {
                     "url": '//cdn.datatables.net/plug-ins/1.10.25/i18n/Czech.json'
                 },
-                ajax: "{{ url_for('api_v1.partners') }}",
+                ajax: "{{ url_for('api_v1.partners_ajax') }}",
                 serverSide: true,
                 createdRow: function (row, data, dataIndex) {
                     if (data.insolvency_count > 0) {

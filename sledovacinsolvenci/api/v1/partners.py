@@ -6,9 +6,9 @@ from sledovacinsolvenci.extensions import db
 from sledovacinsolvenci.partners.models import Partner
 
 
-@api.get('/partners')
+@api.get('/partners/ajax')
 @login_required
-def partners():
+def partners_ajax():
     query = Partner.query.filter(Partner.users.contains(current_user))
     all_user_partners = query.count()
     search = request.args.get('search[value]')

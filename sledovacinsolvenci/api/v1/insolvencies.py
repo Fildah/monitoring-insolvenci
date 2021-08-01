@@ -1,16 +1,31 @@
-from flask import request
+from flask import request, jsonify
 from flask_login import login_required, current_user
 
 from sledovacinsolvenci.api.v1 import api
+from sledovacinsolvenci.extensions import api_auth
 from sledovacinsolvenci.extensions import db
 from sledovacinsolvenci.insolvency.models import Insolvency
 from sledovacinsolvenci.partners.models import Partner
 
 
-@api.get('/insolvencies', defaults={'partner_id': None})
-@api.get('/insolvencies/<int:partner_id>')
+@api.get('/insolvencies')
+@api_auth.login_required
+def user_insolvencies():
+    insolvencies = Insolvency.query.filter(Insolvency.partner.any(Partner.users.contains(api_auth.current_user())))
+    return jsonify({'data': [insolvency.to_dict() for insolvency in insolvencies]})
+
+
+@api.get('/insolvencies/<int:insolvency_id>')
+@api_auth.login_required
+def insolvency_detail(insolvency_id):
+    insolvency = Insolvency.query.filter_by(id=insolvency_id).first()
+    return jsonify(insolvency.to_dict())
+
+
+@api.get('/insolvencies/ajax', defaults={'partner_id': None})
+@api.get('/insolvencies/ajax/<int:partner_id>')
 @login_required
-def insolvencies(partner_id):
+def insolvencies_ajax(partner_id):
     if partner_id is not None:
         query = Insolvency.query.filter(Insolvency.partner.any(Partner.id.in_([partner_id])))
     else:

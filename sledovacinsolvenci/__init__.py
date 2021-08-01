@@ -12,6 +12,7 @@ def create_app():
     sledovacinsolvenci.extensions.migrate.init_app(app, sledovacinsolvenci.extensions.db)
     sledovacinsolvenci.extensions.login_manager.init_app(app)
     sledovacinsolvenci.extensions.login_manager.login_view = 'users.login'
+    sledovacinsolvenci.extensions.mail.init_app(app)
 
     from sledovacinsolvenci.core.views import core
     from sledovacinsolvenci.users.views import users

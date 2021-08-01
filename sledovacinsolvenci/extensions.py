@@ -1,4 +1,6 @@
+from flask_httpauth import HTTPTokenAuth
 from flask_login import LoginManager
+from flask_mail import Mail
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
@@ -7,6 +9,8 @@ from sledovacinsolvenci.config import LOGIN_MESSAGE, LOGIN_MESSAGE_CATEGORY, REF
 db = SQLAlchemy()
 migrate = Migrate()
 login_manager = LoginManager()
+mail = Mail()
+api_auth = HTTPTokenAuth()
 
 # Czech for LoginManager
 login_manager.login_message = LOGIN_MESSAGE

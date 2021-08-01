@@ -159,7 +159,7 @@
                 "language": {
                     "url": '//cdn.datatables.net/plug-ins/1.10.25/i18n/Czech.json'
                 },
-                ajax: "{{ url_for('api_v1.insolvencies', partner_id=partner.id ) }}",
+                ajax: "{{ url_for('api_v1.insolvencies_ajax', partner_id=partner.id ) }}",
                 serverSide: true,
                 autoWidth: false,
                 columns: [

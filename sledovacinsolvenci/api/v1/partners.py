@@ -1,9 +1,49 @@
-from flask import request
+from flask import request, jsonify
 from flask_login import login_required, current_user
 
 from sledovacinsolvenci.api.v1 import api
-from sledovacinsolvenci.extensions import db
+from sledovacinsolvenci.extensions import db, api_auth
+from sledovacinsolvenci.partners.ares import get_ares_data, fill_partner_with_ares
 from sledovacinsolvenci.partners.models import Partner
+
+
+@api.route('/partners', methods=['GET', 'POST'])
+@api_auth.login_required
+def api_partners():
+    if request.method == 'GET':
+        partners = Partner.query.filter(Partner.users.contains(api_auth.current_user()))
+        return jsonify({'data': [partner.to_dict() for partner in partners]})
+    elif request.method == 'POST':
+        ico = request.json.get('ico')
+        if ico is not None or ico != '':
+            partner = Partner.query.filter_by(ico=ico).first()
+            if partner:
+                if api_auth.current_user() not in partner.users:
+                    partner.users.append(api_auth.current_user())
+                    partner.active = True
+            else:
+                partner_ares = get_ares_data(ico)
+                if partner_ares:
+                    partner = fill_partner_with_ares(partner_ares)
+                    partner.users.append(api_auth.current_user())
+                    db.session.add(partner)
+                else:
+                    return jsonify({'data': 'Chyba v ICO'})
+            db.session.commit()
+            return jsonify({'data': partner.to_dict()})
+        return jsonify({'data': 'Chyba v ICO'})
+
+
+@api.route('/partners/<int:partner_id>', methods=['DELETE'])
+@api_auth.login_required
+def api_partner_edit(partner_id):
+    partner = Partner.query.filter_by(id=partner_id).first()
+    if api_auth.current_user() in partner.users:
+        if request.method == 'DELETE':
+            partner.remove_user(api_auth.current_user())
+            if len(partner.users) == 0:
+                partner.deactivate()
+            return jsonify({'data': 'Partner byl smazán!'})
 
 
 @api.get('/partners/ajax')

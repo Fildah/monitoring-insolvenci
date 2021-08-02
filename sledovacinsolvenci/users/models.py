@@ -24,6 +24,7 @@ class User(db.Model, UserMixin):
     created = db.Column(db.DateTime, nullable=False)
     modified = db.Column(db.DateTime, nullable=False)
     token = db.Column(db.String(512), default=None)
+    active = db.Column(db.Boolean, nullable=False)
     partners = db.relationship('Partner', secondary=user2partner, backref=db.backref('users'), lazy='dynamic')
 
     def __init__(self, email, first_name, last_name, password):
@@ -33,6 +34,19 @@ class User(db.Model, UserMixin):
         self.password = generate_password_hash(password)
         self.created = datetime.datetime.now()
         self.modified = datetime.datetime.now()
+        self.active = True
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'email': self.email,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'created': self.created,
+            'modified': self.modified,
+            'token': self.token,
+            'active': self.active
+        }
 
     def password_check(self, password):
         return check_password_hash(self.password, password)
@@ -48,3 +62,7 @@ class User(db.Model, UserMixin):
             return True
         else:
             return False
+
+    def deactivate(self):
+        self.active = False
+        db.session.commit()

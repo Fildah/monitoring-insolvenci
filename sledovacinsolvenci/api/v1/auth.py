@@ -13,6 +13,6 @@ def verify_token(token):
         return False
     if "user_id" in decoded_token:
         user = User.query.filter_by(id=decoded_token['user_id']).first()
-        if user is not None and user.jwt_check(token):
+        if user is not None and user.jwt_check(token) and user.active:
             return user
     return False

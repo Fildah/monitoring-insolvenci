@@ -1,52 +1,183 @@
 {
   "info": {
-    "_postman_id": "8d10df1c-c971-4018-8c1c-74e99a812933",
+    "_postman_id": "cf1fd33f-0bd6-46e8-a518-210372d05e70",
     "name": "Sledovacinsolvenci",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Detail Insolvence",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:5000/api/v1/insolvencies/1",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "5000",
-          "path": [
-            "api",
-            "v1",
-            "insolvencies",
-            "1"
-          ]
+      "name": "Insolvence",
+      "item": [
+        {
+          "name": "Detail Insolvence",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/insolvencies/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "insolvencies",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Všechny insolvence uživatele",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/insolvencies",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "insolvencies"
+              ]
+            }
+          },
+          "response": []
         }
-      },
-      "response": []
+      ]
     },
     {
-      "name": "Všechny insolvence uživatele",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:5000/api/v1/insolvencies",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "5000",
-          "path": [
-            "api",
-            "v1",
-            "insolvencies"
-          ]
+      "name": "Uživatelé",
+      "item": [
+        {
+          "name": "Zneaktivnění uživatele",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/users/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Detail uživatele",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/users",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "users"
+              ]
+            }
+          },
+          "response": []
         }
-      },
-      "response": []
+      ]
+    },
+    {
+      "name": "Partneři",
+      "item": [
+        {
+          "name": "Detail partnerů uživatelů",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/partners",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "partners"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Založení nového partnera",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"ico\": \"03566358\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/partners",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "partners"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Smazání partnera",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/partners/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "partners",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "auth": {
@@ -54,7 +185,7 @@
     "bearer": [
       {
         "key": "token",
-        "value": "",
+        "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxfQ.p9PwtUSaO8qTTce9_yF2twxC4zqu44j2kbSnDyvoFeA",
         "type": "string"
       }
     ]

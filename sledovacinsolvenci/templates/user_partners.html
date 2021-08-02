@@ -103,7 +103,7 @@
                         width: '50px',
                         className: "",
                         render: function (data, type, row) {
-                            return '<div aria-label="controls" class="btn-group flex-wrap" role="group"><form action="{{ url_for('partners.partner_detail') }}' + data + '"method="post" target="_blank"><input class="btn btn-primary" type="submit" value="Detail" /></form><button type="button" class="btn btn-danger editor-delete" data-bs-toggle="modal" data-bs-target="#deletePartner">Smazat</button></div>';
+                            return '<div aria-label="controls" class="btn-group flex-wrap" role="group"><form action="{{ url_for('partners.partner_detail') }}' + data + '"method="get" target="_blank"><input class="btn btn-primary" type="submit" value="Detail" /></form><button type="button" class="btn btn-danger editor-delete" data-bs-toggle="modal" data-bs-target="#deletePartner">Smazat</button></div>';
                         },
                         orderable: false
                     },

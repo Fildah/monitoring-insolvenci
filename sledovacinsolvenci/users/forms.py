@@ -34,3 +34,8 @@ class UpdateUserForm(FlaskForm):
     def check_email(self, field):
         if User.query.filter_by(email=field.data).first():
             raise ValidationError('Email již má platnou registraci')
+
+
+class GenerateApiTokenForm(FlaskForm):
+    token = StringField('Token')
+    submit = SubmitField('Vygenerovat nový token')

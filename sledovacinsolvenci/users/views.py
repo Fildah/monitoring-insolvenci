@@ -3,7 +3,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 
 from sledovacinsolvenci.emails.email_sender import send_email
 from sledovacinsolvenci.extensions import db
-from sledovacinsolvenci.users.forms import RegistrationForm, LoginForm, UpdateUserForm
+from sledovacinsolvenci.users.forms import RegistrationForm, LoginForm, UpdateUserForm, GenerateApiTokenForm
 from sledovacinsolvenci.users.models import User
 
 users = Blueprint('users', __name__)
@@ -31,12 +31,15 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user is not None and user.password_check(form.password.data):
-            login_user(user)
-            next_page = request.args.get('next')
-            if next_page is None or not next_page[0] == '/':
-                next_page = url_for('core.index')
-            flash('Byly jste úspěšně přihlášeni.', 'success')
-            return redirect(next_page)
+            if user.active:
+                login_user(user)
+                next_page = request.args.get('next')
+                if next_page is None or not next_page[0] == '/':
+                    next_page = url_for('core.index')
+                flash('Byly jste úspěšně přihlášeni.', 'success')
+                return redirect(next_page)
+            else:
+                flash(Markup('Účet je zablokován, požádejte administrátora o aktivaci!'), 'danger')
         else:
             flash(Markup(
                 'Chybný email nebo heslo! Pokud ještě účet nemáte, neváhejte se <a href="{}" class="alert-link">registrovat</a>!'.format(
@@ -69,3 +72,18 @@ def account():
     return render_template('account.html',
                            title='Uživatelský účet: {} {}'.format(current_user.first_name, current_user.last_name),
                            form=form)
+
+
+@users.route('/apitoken', methods=['GET', 'POST'])
+@login_required
+def apitoken():
+    form = GenerateApiTokenForm()
+    if form.validate_on_submit():
+        token = current_user.generate_jwt()
+        flash('API Token byl vytvořen, překopírujte si ho.', 'success')
+        form.token.data = token
+        form.submit.label.text = 'Znovu zobrazit token'
+    elif request.method == 'GET' and current_user.token is not None:
+        form.token.data = '********************************'
+        form.submit.label.text = 'Zobrazit token'
+    return render_template('apitoken.html', form=form)

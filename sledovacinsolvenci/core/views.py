@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template
+from flask_migrate import upgrade
 
 core = Blueprint('core', __name__)
 
@@ -11,3 +12,8 @@ def index():
 @core.route('/about')
 def about():
     return render_template('about.html', title='O nas')
+
+
+@core.cli.command()
+def deploy():
+    upgrade()

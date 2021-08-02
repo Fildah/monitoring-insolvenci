@@ -82,10 +82,9 @@ def delete_partner(partner_id):
     partner = Partner.query.get_or_404(partner_id)
     if current_user not in partner.users:
         abort(403)
-    print(current_user.id)
-    partner.users.remove(current_user)
+    partner.remove_user(current_user)
     if len(partner.users) == 0:
-        partner.active = False
+        partner.deactivate()
     db.session.commit()
     flash('Partner {} smazán.'.format(partner.name), 'success')
     return redirect(url_for('partners.user_partners'))

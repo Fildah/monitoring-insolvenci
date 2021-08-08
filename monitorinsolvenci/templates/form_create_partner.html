@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="px-4 pt-2 my-3 text-center">
+        <h1>Vytvoření partnera</h1>
+    </div>
+    <div class="container text-center" style="max-width: 400px;">
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="form-floating mb-3">
+                {{ form.ico(type="text", class="form-control", placeholder="00000000") }}
+                {{ form.ico.label(class='form-label') }}
+            </div>
+            {{ form.submit(class="btn btn-primary btn-lg") }}
+        </form>
+    </div>
+{% endblock %}

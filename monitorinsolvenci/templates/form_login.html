@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="px-4 pt-2 my-3 text-center">
+        <h1>Přihlášení</h1>
+    </div>
+    <div class="container text-center" style="max-width: 400px;">
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="form-floating">
+                {{ form.email(type="email", class="form-control", placeholder="name@example.com") }}
+                {{ form.email.label(class="form-label") }}
+            </div>
+            <div class="form-floating mb-3">
+                {{ form.password(type="password", class="form-control", placeholder="Heslo") }}
+                {{ form.password.label(class="form-label") }}
+            </div>
+            {{ form.submit(class="btn btn-primary btn-lg") }}
+            <a href="url_for()"></a>
+        </form>
+    </div>
+{% endblock %}

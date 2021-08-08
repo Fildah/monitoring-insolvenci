@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="px-4 pt-2 my-3 text-center">
+        <h1>Import partnerů ze souboru</h1>
+    </div>
+    <div class="container text-center" style="max-width: 400px;">
+        <form enctype="multipart/form-data" method="POST" class="importPartnerForm">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.file(type="file", class="form-control", placeholder="soubor.txt") }}
+            </div>
+            {{ form.submit(class="btn btn-primary btn-lg btnImport") }}
+        </form>
+        <a href="{{ url_for('static', filename='sablona_importu_partneru.txt') }}">Šablona pro import ke stažení</a>
+    </div>
+{% endblock %}

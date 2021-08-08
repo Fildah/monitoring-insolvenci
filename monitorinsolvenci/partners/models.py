@@ -109,8 +109,8 @@ class Partner(db.Model):
             'modified': self.modified
         }
 
-    def deactivate(self):
-        self.active = False
+    def toggle_active(self):
+        self.active = not self.active
         db.session.commit()
 
     def remove_user(self, user):

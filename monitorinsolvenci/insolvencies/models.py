@@ -4,7 +4,7 @@ from monitorinsolvenci.extensions import db
 
 
 class Insolvency(db.Model):
-    __tablename__ = 'insolvency'
+    __tablename__ = 'insolvencies'
     id = db.Column(db.Integer, primary_key=True)
     ico = db.Column(db.String(8), index=True)
     case = db.Column(db.String(10), index=True)
@@ -13,8 +13,8 @@ class Insolvency(db.Model):
     ordering_org = db.Column(db.String(100))
     state = db.Column(db.String(40), index=True)
     url = db.Column(db.String(128))
-    bankruptcy_start = db.Column(db.Date)
-    bankruptcy_end = db.Column(db.Date)
+    bankruptcy_start = db.Column(db.DateTime)
+    bankruptcy_end = db.Column(db.DateTime)
     claimed = db.Column(db.Boolean, nullable=False)
     created = db.Column(db.DateTime, nullable=False)
     modified = db.Column(db.DateTime, nullable=False)

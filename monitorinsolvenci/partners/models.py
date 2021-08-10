@@ -6,7 +6,7 @@ from monitorinsolvenci.extensions import db
 
 partner2insolvency = db.Table('partner2insolvency', db.Column('id', db.Integer, primary_key=True),
                               db.Column('partner_id', db.Integer, db.ForeignKey('partners.id')),
-                              db.Column('insolvency_id', db.Integer, db.ForeignKey('insolvency.id'))
+                              db.Column('insolvency_id', db.Integer, db.ForeignKey('insolvencies.id'))
                               )
 
 
@@ -17,8 +17,8 @@ class Partner(db.Model):
     dic = db.Column(db.String(20))
     name = db.Column(db.String(128), index=True)
     state = db.Column(db.String(30))
-    business_start = db.Column(db.Date)
-    business_end = db.Column(db.Date)
+    business_start = db.Column(db.DateTime)
+    business_end = db.Column(db.DateTime)
     business_form = db.Column(db.String(50))
     street = db.Column(db.String(128))
     street_number = db.Column(db.String(6))

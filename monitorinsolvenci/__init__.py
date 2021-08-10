@@ -17,7 +17,7 @@ def create_app():
     from monitorinsolvenci.core.views import core
     from monitorinsolvenci.users.views import users
     from monitorinsolvenci.partners.views import partners
-    from monitorinsolvenci.insolvency.views import insolvencies
+    from monitorinsolvenci.insolvencies.views import insolvencies
     from monitorinsolvenci.api.v1 import api as api_v1
     from monitorinsolvenci.error_pages.handlers import error_pages
 

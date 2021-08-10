@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 from monitorinsolvenci.api.v1 import api
 from monitorinsolvenci.extensions import api_auth
 from monitorinsolvenci.extensions import db
-from monitorinsolvenci.insolvency.models import Insolvency
+from monitorinsolvenci.insolvencies.models import Insolvency
 from monitorinsolvenci.partners.models import Partner
 
 

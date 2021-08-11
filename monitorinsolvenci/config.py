@@ -18,5 +18,3 @@ MAIL_USE_SSL = (os.environ.get('MAIL_USE_SSL') == 'True')
 MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER')
 MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
 MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-
-FLASK_COVERAGE = os.environ.get('FLASK_COVERAGE')

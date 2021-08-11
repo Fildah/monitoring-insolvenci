@@ -2,8 +2,9 @@ from threading import Thread
 
 from flask import current_app, render_template
 from flask_mail import Message
-from monitorinsolvenci import config
-from monitorinsolvenci.extensions import mail
+
+from monitoring_insolvenci import config
+from monitoring_insolvenci.extensions import mail
 
 
 def send_async_email(app, msg):

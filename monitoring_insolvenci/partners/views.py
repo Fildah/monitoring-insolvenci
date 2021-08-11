@@ -1,10 +1,10 @@
 from flask import render_template, url_for, flash, redirect, request, Blueprint, abort
 from flask_login import login_required, current_user
 
-from monitorinsolvenci.extensions import db
-from monitorinsolvenci.partners.ares import get_ares_data, fill_partner_with_ares
-from monitorinsolvenci.partners.forms import PartnerForm, ImportPartnerForm
-from monitorinsolvenci.partners.models import Partner
+from monitoring_insolvenci.extensions import db
+from monitoring_insolvenci.partners.ares import get_ares_data, fill_partner_with_ares
+from monitoring_insolvenci.partners.forms import PartnerForm, ImportPartnerForm
+from monitoring_insolvenci.partners.models import Partner
 
 partners = Blueprint('partners', __name__)
 

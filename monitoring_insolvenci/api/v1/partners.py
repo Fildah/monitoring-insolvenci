@@ -1,10 +1,10 @@
 from flask import request, jsonify
 from flask_login import login_required, current_user
 
-from monitorinsolvenci.api.v1 import api
-from monitorinsolvenci.extensions import db, api_auth
-from monitorinsolvenci.partners.ares import get_ares_data, fill_partner_with_ares
-from monitorinsolvenci.partners.models import Partner
+from monitoring_insolvenci.api.v1 import api
+from monitoring_insolvenci.extensions import db, api_auth
+from monitoring_insolvenci.partners.ares import get_ares_data, fill_partner_with_ares
+from monitoring_insolvenci.partners.models import Partner
 
 
 @api.route('/partners', methods=['GET', 'POST'])

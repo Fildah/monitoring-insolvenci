@@ -1,10 +1,10 @@
 from flask import render_template, url_for, flash, redirect, request, Blueprint, Markup, abort
 from flask_login import login_user, current_user, logout_user, login_required
 
-from monitorinsolvenci.emails.email_sender import send_email
-from monitorinsolvenci.extensions import db
-from monitorinsolvenci.users.forms import RegistrationForm, LoginForm, UpdateUserForm, GenerateApiTokenForm
-from monitorinsolvenci.users.models import User
+from monitoring_insolvenci.emails.email_sender import send_email
+from monitoring_insolvenci.extensions import db
+from monitoring_insolvenci.users.forms import RegistrationForm, LoginForm, UpdateUserForm, GenerateApiTokenForm
+from monitoring_insolvenci.users.models import User
 
 users = Blueprint('users', __name__)
 

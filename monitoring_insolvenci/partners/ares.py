@@ -1,7 +1,7 @@
 import requests
 import xmltodict
 
-from monitorinsolvenci.partners.models import Partner
+from monitoring_insolvenci.partners.models import Partner
 
 
 def get_ares_data(ico):

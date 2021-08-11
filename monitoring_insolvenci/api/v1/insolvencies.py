@@ -1,11 +1,11 @@
 from flask import request, jsonify
 from flask_login import login_required, current_user
 
-from monitorinsolvenci.api.v1 import api
-from monitorinsolvenci.extensions import api_auth
-from monitorinsolvenci.extensions import db
-from monitorinsolvenci.insolvencies.models import Insolvency
-from monitorinsolvenci.partners.models import Partner
+from monitoring_insolvenci.api.v1 import api
+from monitoring_insolvenci.extensions import api_auth
+from monitoring_insolvenci.extensions import db
+from monitoring_insolvenci.insolvencies.models import Insolvency
+from monitoring_insolvenci.partners.models import Partner
 
 
 @api.get('/insolvencies')

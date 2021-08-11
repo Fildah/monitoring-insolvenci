@@ -4,7 +4,8 @@ from flask_mail import Mail
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
-from monitorinsolvenci.config import LOGIN_MESSAGE, LOGIN_MESSAGE_CATEGORY, REFRESH_MESSAGE, REFRESH_MESSAGE_CATEGORY
+from monitoring_insolvenci.config import LOGIN_MESSAGE, LOGIN_MESSAGE_CATEGORY, REFRESH_MESSAGE, \
+    REFRESH_MESSAGE_CATEGORY
 
 db = SQLAlchemy()
 migrate = Migrate()

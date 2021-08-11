@@ -3,8 +3,9 @@ from pathlib import Path
 
 from flask import Blueprint, render_template
 from flask_migrate import upgrade
-from monitorinsolvenci.extensions import db, COV
-from monitorinsolvenci.users.models import User
+
+from monitoring_insolvenci.extensions import db, COV
+from monitoring_insolvenci.users.models import User
 
 core = Blueprint('core', __name__)
 

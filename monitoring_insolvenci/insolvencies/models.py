@@ -1,6 +1,6 @@
 import datetime
 
-from monitorinsolvenci.extensions import db
+from monitoring_insolvenci.extensions import db
 
 
 class Insolvency(db.Model):

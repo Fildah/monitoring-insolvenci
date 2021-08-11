@@ -1,10 +1,10 @@
 from flask import jsonify, request
 from flask_login import login_required, current_user
 
-from monitorinsolvenci.api.v1 import api
-from monitorinsolvenci.extensions import api_auth
-from monitorinsolvenci.extensions import db
-from monitorinsolvenci.users.models import User
+from monitoring_insolvenci.api.v1 import api
+from monitoring_insolvenci.extensions import api_auth
+from monitoring_insolvenci.extensions import db
+from monitoring_insolvenci.users.models import User
 
 
 @api.get('/users')

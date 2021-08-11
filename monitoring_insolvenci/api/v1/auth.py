@@ -1,8 +1,8 @@
 import jwt
 
-from monitorinsolvenci import config
-from monitorinsolvenci.extensions import api_auth
-from monitorinsolvenci.users.models import User
+from monitoring_insolvenci import config
+from monitoring_insolvenci.extensions import api_auth
+from monitoring_insolvenci.users.models import User
 
 
 @api_auth.verify_token

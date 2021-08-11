@@ -1,8 +1,9 @@
 from flask_wtf import FlaskForm
-from monitorinsolvenci.users.models import User
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms import ValidationError
 from wtforms.validators import DataRequired, Email, EqualTo
+
+from monitoring_insolvenci.users.models import User
 
 
 class LoginForm(FlaskForm):

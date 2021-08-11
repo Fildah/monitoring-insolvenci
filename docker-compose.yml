@@ -8,7 +8,7 @@ services:
       - 3306:3306
     environment:
       MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: monitoring-insolvenci
+      MYSQL_DATABASE: monitoring_insolvenci
   adminer:
     image: adminer
     restart: always

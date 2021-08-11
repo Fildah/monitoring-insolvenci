@@ -1,10 +1,10 @@
 from flask import render_template, Blueprint
 from flask_login import login_required, current_user
 
-from monitorinsolvenci.extensions import db
-from monitorinsolvenci.insolvencies.isir2 import Isir, fill_insolvency_with_isir
-from monitorinsolvenci.insolvencies.models import Insolvency
-from monitorinsolvenci.partners.models import Partner
+from monitoring_insolvenci.extensions import db
+from monitoring_insolvenci.insolvencies.isir2 import Isir, fill_insolvency_with_isir
+from monitoring_insolvenci.insolvencies.models import Insolvency
+from monitoring_insolvenci.partners.models import Partner
 
 insolvencies = Blueprint('insolvencies', __name__)
 

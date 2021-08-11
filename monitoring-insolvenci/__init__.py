@@ -1,7 +1,6 @@
-from flask import Flask
-
 import monitorinsolvenci.config
 import monitorinsolvenci.extensions
+from flask import Flask
 
 
 def create_app():

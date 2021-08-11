@@ -1,10 +1,9 @@
 import certifi
+from monitorinsolvenci.insolvencies.models import Insolvency
 from requests import Session
 from zeep import Client, Settings
 from zeep.helpers import serialize_object
 from zeep.transports import Transport
-
-from monitorinsolvenci.insolvencies.models import Insolvency
 
 
 def fill_insolvency_with_isir(insolvency_data):

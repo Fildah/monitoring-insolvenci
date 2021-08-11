@@ -3,7 +3,6 @@ from pathlib import Path
 
 from flask import Blueprint, render_template
 from flask_migrate import upgrade
-
 from monitorinsolvenci.extensions import db, COV
 from monitorinsolvenci.users.models import User
 

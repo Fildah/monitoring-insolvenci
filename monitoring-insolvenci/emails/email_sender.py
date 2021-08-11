@@ -2,7 +2,6 @@ from threading import Thread
 
 from flask import current_app, render_template
 from flask_mail import Message
-
 from monitorinsolvenci import config
 from monitorinsolvenci.extensions import mail
 

@@ -1,7 +1,6 @@
 import datetime
 
 from flask import url_for
-
 from monitorinsolvenci.extensions import db
 
 partner2insolvency = db.Table('partner2insolvency', db.Column('id', db.Integer, primary_key=True),

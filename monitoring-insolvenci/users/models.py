@@ -3,10 +3,9 @@ import datetime
 import jwt
 from flask import url_for
 from flask_login import UserMixin
-from werkzeug.security import generate_password_hash, check_password_hash
-
 from monitorinsolvenci import config
 from monitorinsolvenci.extensions import db, login_manager
+from werkzeug.security import generate_password_hash, check_password_hash
 
 user2partner = db.Table('user2partner', db.Column('id', db.Integer, primary_key=True),
                         db.Column('user_id', db.Integer, db.ForeignKey('users.id')),

@@ -5,6 +5,7 @@ from monitoring_insolvenci.extensions import api_auth
 from monitoring_insolvenci.users.models import User
 
 
+# Obsluha overeni tokenu
 @api_auth.verify_token
 def verify_token(token):
     try:

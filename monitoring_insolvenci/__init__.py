@@ -4,16 +4,21 @@ import monitoring_insolvenci.config
 import monitoring_insolvenci.extensions
 
 
+# Vytvari instanci aplikace Flask s nacetenim vsech rozsireni a blueprintu
+# Vraci objekt flask aplikace
 def create_app():
+    # Inicializace aplikace
     app = Flask(__name__)
     app.config.from_object(config)
 
+    # Naceteni rozsireni
     monitoring_insolvenci.extensions.db.init_app(app)
     monitoring_insolvenci.extensions.migrate.init_app(app, monitoring_insolvenci.extensions.db)
     monitoring_insolvenci.extensions.login_manager.init_app(app)
     monitoring_insolvenci.extensions.login_manager.login_view = 'users.login'
     monitoring_insolvenci.extensions.mail.init_app(app)
 
+    # Import pohledu
     from monitoring_insolvenci.core.views import core
     from monitoring_insolvenci.users.views import users
     from monitoring_insolvenci.partners.views import partners
@@ -21,6 +26,7 @@ def create_app():
     from monitoring_insolvenci.api.v1 import api as api_v1
     from monitoring_insolvenci.error_pages.handlers import error_pages
 
+    # Registrace blueprintu
     app.register_blueprint(core)
     app.register_blueprint(users, url_prefix='/users')
     app.register_blueprint(partners, url_prefix='/partners')

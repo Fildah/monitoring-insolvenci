@@ -3,7 +3,9 @@ import datetime
 from monitoring_insolvenci.extensions import db
 
 
+# Trida User pro ukladani insolvenci
 class Insolvency(db.Model):
+    # Parametry tabulky
     __tablename__ = 'insolvencies'
     id = db.Column(db.Integer, primary_key=True)
     ico = db.Column(db.String(8), index=True)
@@ -19,6 +21,9 @@ class Insolvency(db.Model):
     created = db.Column(db.DateTime, nullable=False)
     modified = db.Column(db.DateTime, nullable=False)
 
+    # Inicializace tridy
+    # Prijima string ico, case, ordering_org, state, url & int year, senate_number
+    # & datetime bankruptcy_start, bankruptcy_end
     def __init__(self, ico, case, year, senate_number, ordering_org, state, url, bankruptcy_start, bankruptcy_end):
         self.ico = ico
         self.case = case
@@ -33,32 +38,46 @@ class Insolvency(db.Model):
         self.created = datetime.datetime.now()
         self.modified = datetime.datetime.now()
 
+    # Updatuje insolvenci
+    # Prijima slovnik s novymi udaji o insolvenci
+    # Vraci slovnik se zmenami nebo False
     def update_insolvency(self, new_insolvency_data):
-        modified = False
-        if self.senate_number is not new_insolvency_data['cisloSenatu']:
+        update = {'changed': False, 'old_data': {}}
+        if self.senate_number != new_insolvency_data['cisloSenatu']:
+            update['old_data']['senate_number'] = self.senate_number
+            update['changed'] = True
             self.senate_number = new_insolvency_data['cisloSenatu']
-            modified = True
-        if self.ordering_org is not new_insolvency_data['nazevOrganizace']:
+        if self.ordering_org != new_insolvency_data['nazevOrganizace']:
+            update['old_data']['ordering_org'] = self.ordering_org
+            update['changed'] = True
             self.ordering_org = new_insolvency_data['nazevOrganizace']
-            modified = True
-        if self.state is not new_insolvency_data['druhStavKonkursu']:
+        if self.state != new_insolvency_data['druhStavKonkursu']:
+            update['old_data']['state'] = self.state
+            update['changed'] = True
             self.state = new_insolvency_data['druhStavKonkursu']
-            modified = True
-        if self.url is not new_insolvency_data['urlDetailRizeni']:
-            self.url = new_insolvency_data['urlDetailRizeni']
-            modified = True
-        if self.bankruptcy_start is not new_insolvency_data['datumPmZahajeniUpadku']:
+        if self.bankruptcy_start != new_insolvency_data['datumPmZahajeniUpadku']:
+            update['old_data']['bankruptcy_start'] = self.bankruptcy_start.strftime("%d.%m.%Y")
+            update['changed'] = True
             self.bankruptcy_start = new_insolvency_data['datumPmZahajeniUpadku']
-            modified = True
-        if self.bankruptcy_end is not new_insolvency_data['datumPmUkonceniUpadku']:
+        if self.bankruptcy_end != new_insolvency_data['datumPmUkonceniUpadku']:
+            update['old_data']['bankruptcy_end'] = self.bankruptcy_end.strftime("%d.%m.%Y")
+            update['changed'] = True
             self.bankruptcy_end = new_insolvency_data['datumPmUkonceniUpadku']
-            modified = True
-        if modified:
+        if update['changed']:
             self.modified = datetime.datetime.now()
+            update.pop('changed')
+            update['new_data'] = self.to_dict()
+            update['time'] = self.modified
+            update['type'] = 'update'
+            return update
+        else:
+            return False
 
+    # Generuje slovnik z atributu instance Insolvency
+    # Vraci slovnik s udaji Insolvency
     def to_dict(self):
         if self.bankruptcy_end is not None:
-            self.bankruptcy_end = self.bankruptcy_end.strftime("%d.%m.%Y")
+            bankruptcy_end = self.bankruptcy_end.strftime("%d.%m.%Y")
         return {
             'id': self.id,
             'ico': self.ico,
@@ -68,7 +87,7 @@ class Insolvency(db.Model):
             'state': self.state,
             'url': self.url,
             'bankruptcy_start': self.bankruptcy_start.strftime("%d.%m.%Y"),
-            'bankruptcy_end': self.bankruptcy_end,
+            'bankruptcy_end': bankruptcy_end,
             'claimed': self.claimed,
             'created': self.created,
             'modified': self.modified,

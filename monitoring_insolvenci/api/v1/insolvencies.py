@@ -8,6 +8,7 @@ from monitoring_insolvenci.insolvencies.models import Insolvency
 from monitoring_insolvenci.partners.models import Partner
 
 
+# Obsluha vytvoreni seznamu vsech insolvenci partneru uzivatele
 @api.get('/insolvencies')
 @api_auth.login_required
 def user_insolvencies():
@@ -15,6 +16,7 @@ def user_insolvencies():
     return jsonify({'data': [insolvency.to_dict() for insolvency in insolvencies]})
 
 
+# Obsluha vytvoreni slovniku s detailem insolvence
 @api.get('/insolvencies/<int:insolvency_id>')
 @api_auth.login_required
 def insolvency_detail(insolvency_id):
@@ -22,15 +24,18 @@ def insolvency_detail(insolvency_id):
     return jsonify(insolvency.to_dict())
 
 
+# Obsluha AJAXoveho pozadavku z DataTables na data insolvece/i sledovaneho/ych partnera/u uzivatele
 @api.get('/insolvencies/ajax', defaults={'partner_id': None})
 @api.get('/insolvencies/ajax/<int:partner_id>')
 @login_required
 def insolvencies_ajax(partner_id):
+    # Rozliseni jestli se jedna o hromadny pohled (None) nebo konkretniho partnera (partner_id)
     if partner_id is not None:
         query = Insolvency.query.filter(Insolvency.partner.any(Partner.id.in_([partner_id])))
     else:
         query = Insolvency.query.filter(Insolvency.partner.any(Partner.users.contains(current_user)))
     all_user_insolvencies = query.count()
+    # Omezeni dotazu podle hledani
     search = request.args.get('search[value]')
     if search:
         query = query.filter(db.or_(
@@ -41,6 +46,7 @@ def insolvencies_ajax(partner_id):
             Insolvency.bankruptcy_end.like('%{}%'.format(search))
         ))
     total_filtered = query.count()
+    # Reseni razeni podle sloupcu
     order = []
     i = 0
     while True:

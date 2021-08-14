@@ -6,12 +6,14 @@ from wtforms.validators import DataRequired, Email, EqualTo
 from monitoring_insolvenci.users.models import User
 
 
+# Formular pro prihlaseni
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Heslo', validators=[DataRequired()])
     submit = SubmitField('Přihlásit')
 
 
+# Formular pro registraci
 class RegistrationForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     first_name = StringField('Jméno', validators=[DataRequired()])
@@ -25,6 +27,7 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('Email již má platnou registraci')
 
 
+# Formular pro aktualizaci uzivatele
 class UpdateUserForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     first_name = StringField('Jméno', validators=[DataRequired()])
@@ -36,6 +39,7 @@ class UpdateUserForm(FlaskForm):
             raise ValidationError('Email již má platnou registraci')
 
 
+# Formular pro generovani API tokenu
 class GenerateApiTokenForm(FlaskForm):
     token = StringField('Token')
     submit = SubmitField('Zobrazit token')

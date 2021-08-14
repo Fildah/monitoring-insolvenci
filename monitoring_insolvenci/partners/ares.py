@@ -4,6 +4,9 @@ import xmltodict
 from monitoring_insolvenci.partners.models import Partner
 
 
+# Ziskava data o ICO z ARES
+# Prijima int ico
+# Vraci slovnik s udaji z ARES nebo False
 def get_ares_data(ico):
     response = requests.get('https://wwwinfo.mfcr.cz/cgi-bin/ares/darv_bas.cgi?ico={}&aktivni=false'.format(ico))
     response.encoding = 'UTF-8'
@@ -57,9 +60,12 @@ def get_ares_data(ico):
         else:
             partner_data['country'] = None
         return partner_data
-    return None
+    return False
 
 
+# Vytvari noveho Partnera z udaju z ARESu
+# Prijima slovnik udaju z ARESu
+# Vraci instanci Partnera
 def fill_partner_with_ares(partner_ares):
     return Partner(
         ico=partner_ares['ico'],

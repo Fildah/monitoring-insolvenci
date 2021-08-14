@@ -1,3 +1,4 @@
+// Vytvari dalsi radek s daty do tabulky
 function format(data) {
     return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
         '<td>' +

@@ -9,12 +9,14 @@ from monitoring_insolvenci.partners.models import Partner
 partners = Blueprint('partners', __name__)
 
 
+# Obsluha zobrazeni vsech sledovanych partneru uzivatele
 @partners.route('/', methods=['GET'])
 @login_required
 def user_partners():
     return render_template('user_partners.html', title='Sledovaní partneři')
 
 
+# Obsluha pridani jednoho partnera do sledovani
 @partners.route('/create', methods=['GET', 'POST'])
 @login_required
 def create_partner():
@@ -42,6 +44,7 @@ def create_partner():
     return render_template('form_create_partner.html', title='Vytvoření partnera', form=form)
 
 
+# Obsluha hromadneho importu partneru do sledovani
 @partners.route('/import', methods=['GET', 'POST'])
 @login_required
 def import_partners():
@@ -66,6 +69,7 @@ def import_partners():
     return render_template('form_import_partners.html', title='Import partnerů', form=form)
 
 
+# Obsluha zobrazeni detailu partnera
 @partners.get('/detail/', defaults={'partner_id': ''})
 @partners.route('/detail/<int:partner_id>', methods=['GET', 'POST'])
 @login_required
@@ -76,6 +80,7 @@ def partner_detail(partner_id):
     return render_template('partner_detail.html', title='Detail partnera: {}'.format(partner.ico), partner=partner)
 
 
+# Obsluha odebrani partnera ze sledovani
 @partners.post('/detail/<int:partner_id>/delete')
 @login_required
 def delete_partner(partner_id):
@@ -88,22 +93,3 @@ def delete_partner(partner_id):
     db.session.commit()
     flash('Partner {} smazán.'.format(partner.name), 'success')
     return redirect(url_for('partners.user_partners'))
-
-
-@partners.cli.command()
-def update_partners():
-    # TODO
-    all_partners = Partner.query.all()
-    for partner in all_partners:
-        insolvencies_for_ico = isir.get_ico_insolvencies(partner.ico)
-        for insolvency_data in insolvencies_for_ico:
-            existing_insolvency = Insolvency.query.filter_by(ico=partner.ico, case=insolvency_data['bcVec'],
-                                                             year=insolvency_data['rocnik']).first()
-            if partner.insolvencies is not None:
-                if existing_insolvency is None:
-                    insolvency = fill_insolvency_with_isir(insolvency_data)
-                    insolvency.partner.append(partner)
-                    db.session.add(insolvency)
-                else:
-                    existing_insolvency.update_insolvency(insolvency_data)
-        db.session.commit()

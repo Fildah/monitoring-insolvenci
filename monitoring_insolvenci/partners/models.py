@@ -4,13 +4,16 @@ from flask import url_for
 
 from monitoring_insolvenci.extensions import db
 
+# Spojova tabulka mezi Partner a Insolvency
 partner2insolvency = db.Table('partner2insolvency', db.Column('id', db.Integer, primary_key=True),
                               db.Column('partner_id', db.Integer, db.ForeignKey('partners.id')),
                               db.Column('insolvency_id', db.Integer, db.ForeignKey('insolvencies.id'))
                               )
 
 
+# Trida User pro ukladani partneru
 class Partner(db.Model):
+    # Parametry tabulky
     __tablename__ = 'partners'
     id = db.Column(db.Integer, primary_key=True)
     ico = db.Column(db.String(8), unique=True, index=True)
@@ -33,9 +36,11 @@ class Partner(db.Model):
     insolvencies = db.relationship('Insolvency', secondary=partner2insolvency, backref=db.backref('partner'),
                                    lazy='dynamic')
 
+    # Inicializace tridy
+    # Prijima string ico, dic, name, state, business_form, street, street_number, orientation_number,
+    # city_part, city, zip_code, country a datetime business_start, business_end
     def __init__(self, ico, dic, name, state, business_start, business_end, business_form, street, street_number,
-                 orientation_number,
-                 city_part, city, zip_code, country):
+                 orientation_number, city_part, city, zip_code, country):
         self.ico = ico
         self.dic = dic
         self.name = name
@@ -54,6 +59,8 @@ class Partner(db.Model):
         self.modified = datetime.datetime.now()
         self.active = True
 
+    # Generuje slovnik z atributu instance Partner
+    # Vraci slovnik s udaji Partnera
     def to_dict(self):
         if self.business_end is not None:
             business_end = self.business_end.strftime("%d.%m.%Y")
@@ -109,10 +116,12 @@ class Partner(db.Model):
             'modified': self.modified
         }
 
+    # Meni parametr active
     def toggle_active(self):
         self.active = not self.active
         db.session.commit()
 
+    # Odebira uzivatele z odberu
     def remove_user(self, user):
         self.users.remove(user)
         db.session.commit()

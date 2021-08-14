@@ -9,6 +9,7 @@ from monitoring_insolvenci.users.models import User
 users = Blueprint('users', __name__)
 
 
+# Obsluha registrace uzivatele
 @users.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
@@ -18,12 +19,14 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash('Děkujeme za registraci.', 'success')
-        send_email(user.email, 'Úspěšná registrace', 'email/register_email')
+        send_email(user.email, 'Vítejte na Monitoring insolvencí', 'email/register_email',
+                   title="Děkujeme za registraci!", user=user)
         login_user(user)
         return redirect(url_for('partners.user_partners'))
     return render_template('form_register.html', title='Registrace', form=form)
 
 
+# Obsluha prihlaseni uzivatele
 @users.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -47,6 +50,7 @@ def login():
     return render_template('form_login.html', title='Přihlášení', form=form)
 
 
+# Obsluha odhlaseni uzivatele
 @users.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
@@ -55,6 +59,7 @@ def logout():
     return redirect(url_for('core.index'))
 
 
+# Obsluha editace uzivatele
 @users.route('/account', methods=['GET', 'POST'])
 @login_required
 def account():
@@ -75,6 +80,7 @@ def account():
                            form=form)
 
 
+# Obsluha generovani API tokenu uzivatele
 @users.route('/apitoken', methods=['GET', 'POST'])
 @login_required
 def api_token():
@@ -88,6 +94,7 @@ def api_token():
     return render_template('form_apitoken.html', form=form)
 
 
+# Obsluha administrace uzivatelu
 @users.route('/administration', methods=['GET'])
 @login_required
 def administration():
@@ -96,6 +103,7 @@ def administration():
     return render_template('user_administration.html', title='Administrace uživatelů')
 
 
+# Obsluha zmeny parametru admin u uzivatele
 @users.post('/detail/<int:user_id>/toogle_admin')
 @login_required
 def toggle_admin(user_id):
@@ -110,6 +118,7 @@ def toggle_admin(user_id):
     return redirect(url_for('users.administration'))
 
 
+# Obsluha zmeny parametru active u uzivatele
 @users.post('/detail/<int:user_id>/toogle_active')
 @login_required
 def toogle_active(user_id):

@@ -1,0 +1,94 @@
+{% extends "email/email_base.html" %}
+{% block csss %}
+    <style>
+        .border-on {
+            border: 1px solid;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <table class="border-on">
+        <thead>
+        <tr>
+            <th>Partner</th>
+            <th>Insolvence</th>
+            <th>Změna/Nová</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for partner in notification %}
+            <tr>
+                <td class="border-on">
+                    <a href="{{ url_for('partners.partner_detail', partner_id=partner) }}">{{ notification[partner]['ico'] }}
+                        - {{ notification[partner]['name'] }}</a>
+                </td>
+                <td class="border-on">
+                    <table>
+                        <tbody>
+                        {% for insolvency in notification[partner]['insolvencies'] %}
+                            <tr>
+                                <td>
+                                    <a href="{{ notification[partner]['insolvencies'][insolvency]['new_data']['url'] }}">{{ notification[partner]['insolvencies'][insolvency]['new_data']['case'] }}</a>
+                                </td>
+                            </tr>
+
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </td>
+                <td class="border-on">
+                    <table>
+                        {% for insolvency in notification[partner]['insolvencies'] %}
+                            <tr>
+                                <td>
+                                    {% if notification[partner]['insolvencies'][insolvency]['type'] == 'update' %}
+                                        {% for changed in notification[partner]['insolvencies'][insolvency]['old_data'] %}
+                                            <p>
+                                                {% if changed == 'senate_number' %}
+                                                    Číslo senátu:
+                                                {% elif changed == 'ordering_org' %}
+                                                    Odpovědný senát:
+                                                {% elif changed == 'state' %}
+                                                    Stav:
+                                                {% elif changed == 'bankruptcy_start' %}
+                                                    Začátek úpadku:
+                                                {% elif changed == 'bankruptcy_end' %}
+                                                    Konec úpadku:
+                                                {% endif %}
+                                                <span style="color:red;">{{ notification[partner]['insolvencies'][insolvency]['old_data'][changed] }}</span>
+                                                ->
+                                                <span style="color:green;">{{ notification[partner]['insolvencies'][insolvency]['new_data'][changed] }}</span>
+                                            </p>
+                                        {% endfor %}
+                                    {% elif notification[partner]['insolvencies'][insolvency]['type'] == 'new' %}
+                                        {% for changed in notification[partner]['insolvencies'][insolvency]['new_data'] %}
+                                            <p>
+                                                {% if changed == 'senate_number' %}
+                                                    Číslo senátu:
+                                                    <span style="color:green;">{{ notification[partner]['insolvencies'][insolvency]['new_data'][changed] }}</span>
+                                                {% elif changed == 'ordering_org' %}
+                                                    Odpovědný senát:
+                                                    <span style="color:green;">{{ notification[partner]['insolvencies'][insolvency]['new_data'][changed] }}</span>
+                                                {% elif changed == 'state' %}
+                                                    Stav:
+                                                    <span style="color:green;">{{ notification[partner]['insolvencies'][insolvency]['new_data'][changed] }}</span>
+                                                {% elif changed == 'bankruptcy_start' %}
+                                                    Začátek úpadku:
+                                                    <span style="color:green;">{{ notification[partner]['insolvencies'][insolvency]['new_data'][changed] }}</span>
+                                                {% elif changed == 'bankruptcy_end' %}
+                                                    Konec úpadku:
+                                                    <span style="color:green;">{{ notification[partner]['insolvencies'][insolvency]['new_data'][changed] }}</span>
+                                                {% endif %}
+                                            </p>
+                                        {% endfor %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

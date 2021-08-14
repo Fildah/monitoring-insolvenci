@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <meta content="Filip Hanš" name="author"/>
+    <title></title>
+    {% block csss %} {% endblock %}
+</head>
+<body>
+<header>
+</header>
+<main>
+    <table role="presentation"
+           style="width:602px;border-collapse:collapse;border:1px solid #cccccc;border-spacing:0;">
+        <tr>
+            <td align="center" style="background:#F8F9FA;">
+                <a href="{{ url_for('core.index') }}">
+                    <img src="{{ url_for('static', filename='journal-check.png') }}">
+                    <h1>Monitoring insolvencí</h1>
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" style="padding:0;">
+                <h3>{{ title }}</h3>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding:0;">
+                {% block content %} {% endblock %}
+            </td>
+        </tr>
+    </table>
+</main>
+<footer>
+</footer>
+{% block scripts %} {% endblock %}
+</body>
+</html>

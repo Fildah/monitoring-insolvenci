@@ -1,6 +1,7 @@
 from flask import jsonify
 
 
+# Obsluha chyboveho kodu 400
 def error_400(message):
     response = jsonify({
         'error': 'Bad request.',
@@ -10,6 +11,7 @@ def error_400(message):
     return response
 
 
+# Obsluha chyboveho kodu 401
 def error_401(message):
     response = jsonify({
         'error': 'Unauthorized.',
@@ -19,15 +21,7 @@ def error_401(message):
     return response
 
 
-def error_403(message):
-    response = jsonify({
-        'error': 'Forbidden.',
-        'message': message
-    })
-    response.status_code = 403
-    return response
-
-
+# Obsluha chyboveho kodu 405
 def error_405(message):
     response = jsonify({
         'error': 'Method not allowed.',

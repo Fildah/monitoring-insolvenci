@@ -1,1 +1,6 @@
-Děkujeme za registraci.
+{% extends "email/email_base.html" %}
+{% block content %}
+    <p>Váš účet byl registrován pod e-mailem {{ user.email }}</p>
+    <p>Neváhejte vyzkoušet naši službu přidáním Vašeho prnvího partnera do sledování.</p>
+    <p><a href="{{ url_for('partners.user_partners') }}">Přejít na sledování partnerů</a></p>
+{% endblock %}

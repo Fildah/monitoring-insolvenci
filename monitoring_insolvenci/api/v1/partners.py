@@ -7,6 +7,7 @@ from monitoring_insolvenci.partners.ares import get_ares_data, fill_partner_with
 from monitoring_insolvenci.partners.models import Partner
 
 
+# Obsluha vytvoreni seznamu vsech partneru uzivatele, nebo vytvoreni noveho partnera
 @api.route('/partners', methods=['GET', 'POST'])
 @api_auth.login_required
 def api_partners():
@@ -34,6 +35,7 @@ def api_partners():
         return jsonify({'data': 'Chyba v ICO'})
 
 
+# Obsluha smazani partnera ze sledovani
 @api.route('/partners/<int:partner_id>', methods=['DELETE'])
 @api_auth.login_required
 def api_partner_edit(partner_id):
@@ -46,11 +48,14 @@ def api_partner_edit(partner_id):
             return jsonify({'data': 'Partner byl smazán!'})
 
 
+# Obsluha AJAXoveho pozadavku z DataTables na data sledovanych partneru uzivatele
 @api.get('/partners/ajax')
 @login_required
 def partners_ajax():
+    # Vyhledani sledovanych partneru uzivatele
     query = Partner.query.filter(Partner.users.contains(current_user))
     all_user_partners = query.count()
+    # Omezeni dotazu podle hledani
     search = request.args.get('search[value]')
     if search:
         query = query.filter(db.or_(
@@ -61,7 +66,7 @@ def partners_ajax():
             Partner.state.like('%{}%'.format(search))
         ))
     total_filtered = query.count()
-    # sorting
+    # Reseni razeni podle sloupcu
     order = []
     i = 0
     while True:

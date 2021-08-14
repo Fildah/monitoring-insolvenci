@@ -7,12 +7,14 @@ from monitoring_insolvenci.extensions import db
 from monitoring_insolvenci.users.models import User
 
 
+# Obsluha vytvoreni slovniku s detailem uzivatele
 @api.get('/users')
 @api_auth.login_required
 def user_info():
     return jsonify({'data': api_auth.current_user().to_dict()})
 
 
+# Obsluha smazani uzivatele
 @api.route('/users/<int:user_id>', methods=['DELETE'])
 @api_auth.login_required
 def user_edit(user_id):
@@ -25,11 +27,14 @@ def user_edit(user_id):
                 return jsonify({'data': 'Uživatel je již neaktivní!'})
 
 
+# Obsluha AJAXoveho pozadavku z DataTables na data administrace uzivatelu
 @api.get('/users/ajax')
 @login_required
 def users_ajax():
+    # Vyhledani vsech uzivatelu krome hlavniho admina a sebe sama
     query = User.query.filter(User.id != 1).filter(User.id != current_user.id)
     all_user_partners = query.count()
+    # Omezeni dotazu podle hledani
     search = request.args.get('search[value]')
     if search:
         query = query.filter(db.or_(
@@ -39,7 +44,7 @@ def users_ajax():
             User.last_name.like('%{}%'.format(search))
         ))
     total_filtered = query.count()
-    # sorting
+    # Reseni razeni podle sloupcu
     order = []
     i = 0
     while True:

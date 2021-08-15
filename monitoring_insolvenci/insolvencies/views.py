@@ -59,7 +59,8 @@ def update_insolvencies():
                         notification[partner.id]['insolvencies'] = {}
                     notification[partner.id]['insolvencies'][insolvency.id] = insolvencies_for_notification[
                         insolvency.id]
-        send_email(user.email, 'Změny v insolvencích k {}'.format(datetime.date.today().strftime("%d.%m.%Y")),
-                   'email/update_insolvencies',
-                   title='Změny v insolvencích k {}'.format(datetime.date.today().strftime("%d.%m.%Y")), user=user,
-                   notification=notification)
+        if len(notification) != 0:
+            send_email(user.email, 'Změny v insolvencích k {}'.format(datetime.date.today().strftime("%d.%m.%Y")),
+                       'email/update_insolvencies',
+                       title='Změny v insolvencích k {}'.format(datetime.date.today().strftime("%d.%m.%Y")), user=user,
+                       notification=notification)
